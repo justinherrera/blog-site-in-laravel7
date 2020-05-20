@@ -17,10 +17,10 @@
         @foreach($posts as $post)
         {{-- {{dd($post->image)}} --}}
        {{-- {{ dd( asset('images/'.$post->image)) }} --}}
-        <div class="card mb-4">
+        <div class="card mb-4 post-section post-{{$post->id}}">
           {{-- <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap"> --}}
           <img class="card-img-top" src="/storage/images/{{$post->image}}" alt="Card image cap">
-         
+          
           <div class="card-body">
             <h2 class="card-title">{{ $post->title }}</h2>
             <p class="card-text">{{ $post->body }}</p>

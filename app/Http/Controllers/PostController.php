@@ -106,11 +106,16 @@ class PostController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'body' => 'required'
+            'body' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+        $imageName = time().'.'.$request->image->extension();  
+   
+        $path = $request->file('image')->storeAs('public/images',$imageName);
         $post = Post::find($id);
         $post->title =  $request->get('title');
         $post->body =  $request->get('body');
+        $post->image = $imageName;
         $post->save();
         return redirect('/post');
     }
@@ -125,6 +130,6 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         $post->delete();
-        return redirect('/post');
+        // return redirect('/post');
     }
 }

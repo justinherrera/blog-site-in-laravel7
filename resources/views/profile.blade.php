@@ -22,7 +22,7 @@
                         <div class="card-body">
                             <h2 class="card-title">{{ $post->title }}</h2>
                             <p class="card-text">{{ $post->body }}</p>
-                            <a  href="post/{{ $post->id }}" class="btn btn-primary">Read More →</a>
+                            <a  href="/post/{{ $post->id }}" class="btn btn-primary">Read More →</a>
                         </div>
                         <div class="card-footer text-muted">
                             Posted {{$post->created_at->diffForHumans() }} by

@@ -1,9 +1,9 @@
 @extends('layouts.app')
-
+@include('layouts.nav')
 @section('content')
 <div class="container">
 
-    <div class="row">
+    <div class="row post-section" id="post-{{$post->id}}">
 
       <!-- Post Content Column -->
       <div class="col-lg-8">
@@ -14,18 +14,19 @@
         <!-- Author -->
         <p class="lead">
           by
-          <a href="user/{{$post->user->id}}">{{ $post->user->name }}</a>
+          <a href="/user/{{$post->user->id}}">{{ $post->user->name }}</a>
         </p>
 
         <hr>
 
         <!-- Date/Time -->
         <p>{{$post->created_at->diffForHumans() }}</p>
-        <form action="{{ route('post.destroy',$post->id) }}" method="post">
-          @csrf
-          @method('delete')
-          <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
+        @if(!Auth::guest())
+          @if(Auth::user()->id == $post->user_id)
+            <a href="/post/{{$post->id}}/edit" class="btn btn-success edit">Edit</a>
+            <a  class="btn btn-danger delete">Delete</a>
+          @endif
+        @endif
         <hr>
 
         <!-- Preview Image -->
@@ -113,7 +114,7 @@
                 <ul class="list-unstyled mb-0">
                   @foreach ($cats as $cat)
                     <li>
-                      <a href="category/{{$cat->id}}">{{$cat->category}}</a>
+                      <a href="/category/{{$cat->id}}">{{$cat->category}}</a>
                     </li>
                   @endforeach
                 </ul>
