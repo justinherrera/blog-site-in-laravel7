@@ -36,8 +36,8 @@
 
         <!-- Post Content -->
         <p class="lead">{{$post->body }}</p>
-        <a href = "/like/{{$post->id}}" class="btn btn-success like">Like</a>
-        <a class="btn btn-danger dislike">Dislike</a>
+        <a href = "/like/{{$post->id}}" class="btn btn-success like">Like ({{$likeCtr}})</a>
+        <a href = "/dislike/{{$post->id}}" class="btn btn-danger dislike">Dislike ({{$dislikeCtr}})</a>
 
         <hr>
 

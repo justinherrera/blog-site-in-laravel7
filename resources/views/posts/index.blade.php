@@ -24,9 +24,9 @@
           <div class="card-body">
             <h2 class="card-title">{{ $post->title }}</h2>
             <p class="card-text">{{ $post->body }}</p>
-            <a  href="post/{{ $post->id }}" class="btn btn-primary">Read More →</a>
-            <a class="btn btn-success like">Like</a>
-            <a class="btn btn-danger dislike">Dislike</a>
+            <a  href="/post/{{ $post->id }}" class="btn btn-primary">Read More →</a>
+            <a href = "/like/{{$post->id}}" class="btn btn-success like">Like ({{$like->where('post_id','=',$post->id)->count()}})</a>
+            <a href = "/dislike/{{$post->id}}" class="btn btn-danger dislike">Dislike ({{$dislike->where('post_id','=',$post->id)->count()}})</a>
           </div>
           <div class="card-footer text-muted">
             Posted {{$post->created_at->diffForHumans() }} by
@@ -93,7 +93,3 @@
     <!-- /.row -->
 
   </div>
-  <script type="text/javascript">
-    let token = '{{ Session::token() }}'
-    let urlLike = '{{ route("like") }}'
-  </script>

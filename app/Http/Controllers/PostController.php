@@ -26,7 +26,10 @@ class PostController extends Controller
         // for public posts
         $posts = Post::orderBy('created_at','desc')->paginate(2);
         $cats = Catrgory::all();
-        return view('posts.index', compact('posts','cats'));
+        $like = Like::all();
+        $dislike = Dislike::all();
+        dd($like->where('user_id',Auth::user()->id)); // next task check if user alerady liked the post
+        return view('posts.index', compact('posts','cats','like','dislike'));
         // $user_id = auth()->user()->id;
         // $user = User::findOrFail($user_id);
         
@@ -37,26 +40,6 @@ class PostController extends Controller
         $posts = Post::where('title','like',"%$search%")->paginate(2);
         $cats = Catrgory::all();
         return view('posts.index', compact('posts','cats'));
-    }
-
-    public function likePost($id){
-        $user = Auth::user()->id;
-        $like_user = Like::where([
-            'user_id' => $user,
-            'post_id' => $id
-        ]);
-        if(empty($like_user->user_id)){
-            $user = Auth::user()->id;
-            $post_id = $id;
-            $like = new Like([
-                'user_id' => $user,
-                'post_id' => $post_id,
-            ]);
-            $like->save();
-            return redirect('/post/{$id}');
-        }else{
-            return redirect('/post/{$id}');
-        }
     }
     /**
      * Show the form for creating a new resource.
@@ -109,9 +92,12 @@ class PostController extends Controller
         $post = Post::find($id);
         $cats = Catrgory::all();
         $likeCtr = Like::where([
-            'post_id' => $post
-            ])->get();
-        return view('posts.show', compact('post','cats'));
+            'post_id' => $post->id
+            ])->count();
+        $dislikeCtr = Dislike::where([
+            'post_id' => $post->id
+            ])->count();
+        return view('posts.show', compact('post','cats','likeCtr','dislikeCtr'));
     }
 
     /**
@@ -162,5 +148,43 @@ class PostController extends Controller
         $post = Post::find($id);
         $post->delete();
         // return redirect('/post');
+    }
+    public function likePost($id){
+        $user = Auth::user()->id;
+        $like_user = Like::where([
+            'user_id' => $user,
+            'post_id' => $id
+        ])->first();
+        if(empty($like_user->user_id)){
+            $user = Auth::user()->id;
+            $post_id = $id;
+            $like = new Like([
+                'user_id' => $user,
+                'post_id' => $post_id,
+            ]);
+            $like->save();
+            return redirect()->back();
+        }else{
+            return redirect()->back();
+        }
+    }
+    public function dislikePost($id){
+        $user = Auth::user()->id;
+        $dislike_user = Dislike::where([
+            'user_id' => $user,
+            'post_id' => $id
+        ])->first();
+        if(empty($dislike_user->user_id)){
+            $user = Auth::user()->id;
+            $post_id = $id;
+            $dislike = new Dislike([
+                'user_id' => $user,
+                'post_id' => $post_id,
+            ]);
+            $dislike->save();
+            return redirect()->back();
+        }else{
+            return redirect()->back();
+        }
     }
 }

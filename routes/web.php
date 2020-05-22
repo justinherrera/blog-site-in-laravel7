@@ -30,3 +30,4 @@ Route::get('/like','PostController@likePost')->name('like');
 // Route::post('image-upload', 'ImageUploadController@imageUploadPost')->name('image.upload.post');
 
 Route::get('/like/{id}', 'PostController@likePost');
+Route::get('/dislike/{id}', 'PostController@dislikePost');
