@@ -15,7 +15,7 @@
                             <div class="card-body">
                                 <h2 class="card-title">{{ $cat->title }}</h2>
                                 <p class="card-text">{{ $cat->body }}</p>
-                                <a  href="post/{{ $cat->id }}" class="btn btn-primary">Read More →</a>
+                                <a  href="/post/{{ $cat->id }}" class="btn btn-primary">Read More →</a>
                             </div>
                             <div class="card-footer text-muted">
                                 Posted {{$cat->created_at->diffForHumans() }} by

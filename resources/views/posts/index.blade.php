@@ -17,7 +17,7 @@
         @foreach($posts as $post)
         {{-- {{dd($post->image)}} --}}
        {{-- {{ dd( asset('images/'.$post->image)) }} --}}
-        <div class="card mb-4 post-section post-{{$post->id}}">
+        <div class="card mb-4 post-section" id="post-{{$post->id}}">
           {{-- <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap"> --}}
           <img class="card-img-top" src="/storage/images/{{$post->image}}" alt="Card image cap">
           
@@ -25,6 +25,8 @@
             <h2 class="card-title">{{ $post->title }}</h2>
             <p class="card-text">{{ $post->body }}</p>
             <a  href="post/{{ $post->id }}" class="btn btn-primary">Read More →</a>
+            <a class="btn btn-success like">Like</a>
+            <a class="btn btn-danger dislike">Dislike</a>
           </div>
           <div class="card-footer text-muted">
             Posted {{$post->created_at->diffForHumans() }} by
@@ -50,12 +52,14 @@
         <div class="card my-4 ">
           <h5 class="card-header">Search</h5>
           <div class="card-body">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Search for...">
+            <form action="/search" method="get">
+            <div class="input-group">   
+              <input type="text" name="search" class="form-control" placeholder="Search for...">
               <span class="input-group-btn">
-                <button class="btn btn-secondary" type="button">Go!</button>
-              </span>
+                <button class="btn btn-secondary" type="submit">Go!</button>
+              </span> 
             </div>
+          </form>
           </div>
         </div>
 
@@ -64,27 +68,12 @@
           <h5 class="card-header">Categories</h5>
           <div class="card-body">
             <div class="row">
-              <div class="col-lg-6">
-                @foreach ($cats as $cat) <!-- show list of categories -->
-                <ul class="list-unstyled mb-0">
-                  <li>
-                  <a href="/category/{{$cat->id}}">{{ $cat->category }}</</a>
-                  </li>
-                </ul>
-                @endforeach
-              </div>
-              <div class="col-lg-6">
-                <ul class="list-unstyled mb-0">
-                  <li>
-                    <a href="#">JavaScript</a>
-                  </li>
-                  <li>
-                    <a href="#">CSS</a>
-                  </li>
-                  <li>
-                    <a href="#">Tutorials</a>
-                  </li>
-                </ul>
+              <div class="col-lg-12">    
+                <ul class="list-group">
+                  @foreach ($cats as $cat) <!-- show list of categories -->
+                  <li class="list-group-item"><a href="/category/{{$cat->id}}">{{ $cat->category }}</a></li>
+                  @endforeach
+                </ul>   
               </div>
             </div>
           </div>
@@ -104,3 +93,7 @@
     <!-- /.row -->
 
   </div>
+  <script type="text/javascript">
+    let token = '{{ Session::token() }}'
+    let urlLike = '{{ route("like") }}'
+  </script>

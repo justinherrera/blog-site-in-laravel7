@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\User;
 use App\Catrgory;
+use App\Like;
+use App\Dislike;
+use Auth;
 class PostController extends Controller
 {
     /**
@@ -29,7 +32,32 @@ class PostController extends Controller
         
         // return view('posts.index')->with('posts', $user->posts);
     }
+    public function search(Request $request){
+        $search = $request->get('search');
+        $posts = Post::where('title','like',"%$search%")->paginate(2);
+        $cats = Catrgory::all();
+        return view('posts.index', compact('posts','cats'));
+    }
 
+    public function likePost($id){
+        $user = Auth::user()->id;
+        $like_user = Like::where([
+            'user_id' => $user,
+            'post_id' => $id
+        ]);
+        if(empty($like_user->user_id)){
+            $user = Auth::user()->id;
+            $post_id = $id;
+            $like = new Like([
+                'user_id' => $user,
+                'post_id' => $post_id,
+            ]);
+            $like->save();
+            return redirect('/post/{$id}');
+        }else{
+            return redirect('/post/{$id}');
+        }
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -80,6 +108,9 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         $cats = Catrgory::all();
+        $likeCtr = Like::where([
+            'post_id' => $post
+            ])->get();
         return view('posts.show', compact('post','cats'));
     }
 

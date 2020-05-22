@@ -16,4 +16,12 @@ class Post extends Model
     {
         return $this->belongsTo('App\Category', 'cat_id');
     }
+
+    public function likes(){
+        return $this->belongsTo('App\Like');
+    }
+    
+    public function dislikes(){
+        return $this->belongsTo('App\Dislike');
+    }
 }

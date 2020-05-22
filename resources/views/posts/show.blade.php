@@ -36,6 +36,8 @@
 
         <!-- Post Content -->
         <p class="lead">{{$post->body }}</p>
+        <a href = "/like/{{$post->id}}" class="btn btn-success like">Like</a>
+        <a class="btn btn-danger dislike">Dislike</a>
 
         <hr>
 
@@ -110,27 +112,12 @@
           <h5 class="card-header">Categories</h5>
           <div class="card-body">
             <div class="row">
-              <div class="col-lg-6">
-                <ul class="list-unstyled mb-0">
-                  @foreach ($cats as $cat)
-                    <li>
-                      <a href="/category/{{$cat->id}}">{{$cat->category}}</a>
-                    </li>
+              <div class="col-lg-12">    
+                <ul class="list-group">
+                  @foreach ($cats as $cat) <!-- show list of categories -->
+                  <li class="list-group-item"><a href="/category/{{$cat->id}}">{{ $cat->category }}</a></li>
                   @endforeach
-                </ul>
-              </div>
-              <div class="col-lg-6">
-                <ul class="list-unstyled mb-0">
-                  <li>
-                    <a href="#">JavaScript</a>
-                  </li>
-                  <li>
-                    <a href="#">CSS</a>
-                  </li>
-                  <li>
-                    <a href="#">Tutorials</a>
-                  </li>
-                </ul>
+                </ul>   
               </div>
             </div>
           </div>

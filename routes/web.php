@@ -20,10 +20,13 @@ Route::get('/', function () {
 Route::resource('post','PostController');
 Auth::routes();
 
-
+Route::get('/search','PostController@search');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/user/{id}', 'HomeController@userProfile');
 // Route::get('/user/{id}', 'HomeController@index')->name('home');
 Route::get('/category/{cat_id}','Category@getPostsByCategory');
+Route::get('/like','PostController@likePost')->name('like');
 // Route::get('image-upload', 'ImageUploadController@imageUpload')->name('image.upload');
 // Route::post('image-upload', 'ImageUploadController@imageUploadPost')->name('image.upload.post');
+
+Route::get('/like/{id}', 'PostController@likePost');
