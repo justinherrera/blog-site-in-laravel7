@@ -25,8 +25,8 @@
             <h2 class="card-title">{{ $post->title }}</h2>
             <p class="card-text">{{ $post->body }}</p>
             <a  href="/post/{{ $post->id }}" class="btn btn-primary">Read More →</a>
-            <a href = "/like/{{$post->id}}" class="btn btn-success like">Like ({{$like->where('post_id','=',$post->id)->count()}})</a>
-            <a href = "/dislike/{{$post->id}}" class="btn btn-danger dislike">Dislike ({{$dislike->where('post_id','=',$post->id)->count()}})</a>
+            <a href = "/like/{{$post->id}}" class="btn btn-success like">{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Liked' : 'Like' : 'Like'}} ({{$like->where('post_id','=',$post->id)->count()}})</a>
+            <a href = "/dislike/{{$post->id}}" class="btn btn-danger dislike">{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Disliked' : 'Dislike' : 'Dislike'}} ({{$dislike->where('post_id','=',$post->id)->count()}})</a>
           </div>
           <div class="card-footer text-muted">
             Posted {{$post->created_at->diffForHumans() }} by
@@ -91,5 +91,7 @@
 
     </div>
     <!-- /.row -->
-
+  <script type="text/javascript">
+    console.log('user '+{!! auth()->user()->id !!})
+  </script>
   </div>

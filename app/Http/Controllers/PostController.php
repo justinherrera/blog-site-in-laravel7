@@ -28,7 +28,7 @@ class PostController extends Controller
         $cats = Catrgory::all();
         $like = Like::all();
         $dislike = Dislike::all();
-        dd($like->where('user_id',Auth::user()->id)); // next task check if user alerady liked the post
+        //dd($like->where('user_id',Auth::user()->id)); // next task check if user alerady liked the post
         return view('posts.index', compact('posts','cats','like','dislike'));
         // $user_id = auth()->user()->id;
         // $user = User::findOrFail($user_id);
