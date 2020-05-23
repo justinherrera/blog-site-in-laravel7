@@ -18,6 +18,7 @@ Route::get('/', function () {
 });
 
 Route::resource('post','PostController');
+Route::resource('comments','CommentController');
 Auth::routes();
 
 Route::get('/search','PostController@search');

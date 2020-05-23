@@ -8,6 +8,7 @@ use App\User;
 use App\Catrgory;
 use App\Like;
 use App\Dislike;
+use App\Comments;
 use Auth;
 class PostController extends Controller
 {
@@ -97,7 +98,10 @@ class PostController extends Controller
         $dislikeCtr = Dislike::where([
             'post_id' => $post->id
             ])->count();
-        return view('posts.show', compact('post','cats','likeCtr','dislikeCtr'));
+        $like = Like::all();
+        $dislike = Dislike::all();
+        $comments = Comments::where('post_id', '=', $post->id)->get();
+        return view('posts.show', compact('post','cats','likeCtr','dislikeCtr','like','dislike','comments'));
     }
 
     /**

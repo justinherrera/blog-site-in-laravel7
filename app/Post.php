@@ -24,4 +24,8 @@ class Post extends Model
     public function dislikes(){
         return $this->belongsTo('App\Dislike');
     }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }
