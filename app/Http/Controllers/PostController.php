@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Post;
 use App\User;
 use App\Catrgory;
@@ -90,7 +91,10 @@ class PostController extends Controller
      */
     public function show($id)
     {
+       
         $post = Post::find($id);
+        $cat = Catrgory::findOrFail($post->cat_id);
+        $relatedPosts = $cat->posts()->orderBy('created_at','desc')->get();
         $cats = Catrgory::all();
         $likeCtr = Like::where([
             'post_id' => $post->id
@@ -101,7 +105,7 @@ class PostController extends Controller
         $like = Like::all();
         $dislike = Dislike::all();
         $comments = Comments::where('post_id', '=', $post->id)->get();
-        return view('posts.show', compact('post','cats','likeCtr','dislikeCtr','like','dislike','comments'));
+        return view('posts.show', compact('post','cats','likeCtr','dislikeCtr','like','dislike','comments','relatedPosts'));
     }
 
     /**
@@ -153,11 +157,17 @@ class PostController extends Controller
         $post->delete();
         // return redirect('/post');
     }
-    public function likePost($id){
+    public function likePost(Request $request, $id){
         $user = Auth::user()->id;
+        $islike = 1;
+        if($request->get('islike') == 0){
+            $islike = 1;
+        }else{
+            $islike = 0;
+        }
         $like_user = Like::where([
             'user_id' => $user,
-            'post_id' => $id
+            'post_id' => $id,
         ])->first();
         if(empty($like_user->user_id)){
             $user = Auth::user()->id;
@@ -165,6 +175,7 @@ class PostController extends Controller
             $like = new Like([
                 'user_id' => $user,
                 'post_id' => $post_id,
+                'islike' => $islike
             ]);
             $like->save();
             return redirect()->back();
@@ -190,5 +201,12 @@ class PostController extends Controller
         }else{
             return redirect()->back();
         }
+    }
+    public function updatelikePost(Request $request, $id){
+        $like = Like::find($id);
+        $like->user_id = Auth::user()->id;
+        $like->post_id = $id;
+        $like->islike = false;
+        $like->save();
     }
 }

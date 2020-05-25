@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
 
 Route::resource('post','PostController');
@@ -31,4 +31,5 @@ Route::get('/like','PostController@likePost')->name('like');
 // Route::post('image-upload', 'ImageUploadController@imageUploadPost')->name('image.upload.post');
 
 Route::get('/like/{id}', 'PostController@likePost');
+// Route::get('/like/{id}', 'PostController@updatelikePost');
 Route::get('/dislike/{id}', 'PostController@dislikePost');

@@ -2,7 +2,9 @@
 @include('layouts.nav')
 @section('content')
 <div class="container">
-
+   @if(!Auth::guest())
+    <input type="hidden" class="user_id" id="{{Auth::user()->id}}"> <!-- to determine user id -->
+  @endif
     <div class="row">
 
       <!-- Blog Entries Column -->
@@ -14,7 +16,7 @@
 
         <a href="/post/create">Create new post</a>
         <!-- Blog Post -->
-        @foreach($posts as $post)
+        @forelse($posts as $post)
         {{-- {{dd($post->image)}} --}}
        {{-- {{ dd( asset('images/'.$post->image)) }} --}}
         <div class="card mb-4 post-section" id="post-{{$post->id}}">
@@ -23,11 +25,12 @@
           
           <div class="card-body">
             <h2 class="card-title">{{ $post->title }}</h2>
-            <p class="card-text">{{ $post->body }}</p>
-            <a  href="/post/{{ $post->id }}" class="btn btn-primary">Read More →</a>
+            <p class="card-text">{{ Str::words($post->body,10) }}</p>
+            <a href="/post/{{ $post->id }}" class="btn btn-primary"><span class="fas fa-eye"></span> Read More →</a>
             @if(!Auth::guest())
-              <a href = "/like/{{$post->id}}" class="btn btn-success like">{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Liked' : 'Like' : 'Like'}} ({{$like->where('post_id','=',$post->id)->count()}})</a>
-              <a href = "/dislike/{{$post->id}}" class="btn btn-danger dislike">{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Disliked' : 'Dislike' : 'Dislike'}} ({{$dislike->where('post_id','=',$post->id)->count()}})</a>
+            <input type="hidden" name="islike" value="{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 1 : 0 : 0}}"> 
+          <a id="{{$post->id}}" class="btn btn-success like"><span id="checkLike">{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Liked' : 'Like' : 'Like'}}</span> <span id="countLike">({{$like->where('post_id','=',$post->id)->count()}})</span></a>
+              <a href = "/dislike/{{$post->id}}" class="btn btn-danger dislike"><span class="far fa-thumbs-down"></span>{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Disliked' : 'Dislike' : 'Dislike'}} ({{$dislike->where('post_id','=',$post->id)->count()}})</a>
             @endif
           </div>
           <div class="card-footer text-muted">
@@ -35,8 +38,9 @@
             <a href="user/{{$post->user->id}}">{{ $post->user->name }}</a>
           </div>
         </div>
-
-        @endforeach
+        @empty
+          <p>No posts available</p>
+        @endforelse
 
         <!-- Pagination -->
         <ul class="pagination justify-content-center mb-4">

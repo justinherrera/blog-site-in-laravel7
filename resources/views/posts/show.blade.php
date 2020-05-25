@@ -44,20 +44,25 @@
         <hr>
 
         <!-- Comments Form -->
-        <div class="card my-4">
-          <h5 class="card-header">Leave a Comment:</h5>
-          <div class="card-body">
-            <form action="{{ route('comments.store') }}" method="post">
-              @csrf
-              <input type="hidden" name="post_id" value="{{$post->id}}">
-              <div class="form-group">
-                <textarea class="form-control" rows="3" name="body"></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+        @if(!Auth::guest())
+          <div class="card my-4">
+            <h5 class="card-header">Leave a Comment:</h5>
+            <div class="card-body">
+              <form action="{{ route('comments.store') }}" method="post">
+                @csrf
+                <input type="hidden" name="post_id" value="{{$post->id}}">
+                <div class="form-group">
+                  <textarea class="form-control" rows="3" name="body"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
           </div>
-        </div>
-
+        @else 
+          <div class="card my-4">
+            <a href="/login">Login</a>
+          </div>
+        @endif
         <!-- Single Comment -->
         @foreach($comments as $comment)
           <div class="media mb-4">
@@ -106,7 +111,11 @@
         <div class="card my-4">
           <h5 class="card-header">Related Posts</h5>
           <div class="card-body">
-            You can put anything you want inside of these side widgets. They are easy to use, and feature the new Bootstrap 4 card containers!
+            <ul class="list-group">
+              @foreach($relatedPosts as $relatedPost)
+                <li class="list-group-item"><a href="/post/{{$relatedPost->id}}">{{ $relatedPost->title }}</a></li> 
+              @endforeach
+              </ul>
           </div>
         </div>
 
