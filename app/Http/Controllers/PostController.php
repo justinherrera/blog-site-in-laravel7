@@ -158,55 +158,67 @@ class PostController extends Controller
         // return redirect('/post');
     }
     public function likePost(Request $request, $id){
+       
         $user = Auth::user()->id;
-        $islike = 1;
-        if($request->get('islike') == 0){
-            $islike = 1;
-        }else{
-            $islike = 0;
-        }
+        // $islike = 1;
         $like_user = Like::where([
             'user_id' => $user,
             'post_id' => $id,
-        ])->first();
-        if(empty($like_user->user_id)){
-            $user = Auth::user()->id;
-            $post_id = $id;
-            $like = new Like([
-                'user_id' => $user,
-                'post_id' => $post_id,
-                'islike' => $islike
-            ]);
-            $like->save();
-            return redirect()->back();
+        ])->first(); // like once
+       
+        if($request->get('islike') == 0){
+            
+            $islike = 1;
+            if(empty($like_user->user_id)){ //
+                $user = Auth::user()->id;
+                $post_id = $id;
+                $like = new Like([
+                    'user_id' => $user,
+                    'post_id' => $post_id,
+                    'islike' => 1
+                ]);
+                $like->save();
+                return redirect()->back();
+            }
         }else{
+            $islike = 0;
+            $post_id = $id;
+            $like = Auth::user()->likes()->where('post_id', $id)->first();
+            $like->delete();
             return redirect()->back();
+            
         }
+        return redirect()->back();
+
     }
-    public function dislikePost($id){
+    public function dislikePost(Request $request, $id){
         $user = Auth::user()->id;
+        // $islike = 1;
         $dislike_user = Dislike::where([
             'user_id' => $user,
-            'post_id' => $id
-        ])->first();
-        if(empty($dislike_user->user_id)){
-            $user = Auth::user()->id;
-            $post_id = $id;
-            $dislike = new Dislike([
-                'user_id' => $user,
-                'post_id' => $post_id,
-            ]);
-            $dislike->save();
-            return redirect()->back();
+            'post_id' => $id,
+        ])->first(); // like once
+       
+        if($request->get('isdislike') == 0){
+            $isdislike = 1;
+            if(empty($dislike_user->user_id)){ //
+                $user = Auth::user()->id;
+                $post_id = $id;
+                $dislike = new Dislike([
+                    'user_id' => $user,
+                    'post_id' => $post_id,
+                ]);
+                $dislike->save();
+                return redirect()->back();
+            }
         }else{
+            $dislike = 0;
+            $post_id = $id;
+            $dislike = Auth::user()->dislikes()->where('post_id', $id)->first();
+            $dislike->delete();
             return redirect()->back();
+            
         }
-    }
-    public function updatelikePost(Request $request, $id){
-        $like = Like::find($id);
-        $like->user_id = Auth::user()->id;
-        $like->post_id = $id;
-        $like->islike = false;
-        $like->save();
+        return redirect()->back();
     }
 }

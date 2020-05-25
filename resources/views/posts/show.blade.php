@@ -2,7 +2,9 @@
 @include('layouts.nav')
 @section('content')
 <div class="container">
-
+  @if(!Auth::guest())
+  <input type="hidden" class="user_name" id="{{Auth::user()->name}}"> <!-- to determine user id -->
+  @endif
     <div class="row post-section" id="post-{{$post->id}}">
 
       <!-- Post Content Column -->
@@ -37,8 +39,18 @@
         <!-- Post Content -->
         <p class="lead">{{$post->body }}</p>
         @if(!Auth::guest())
-          <a href = "/like/{{$post->id}}" class="btn btn-success like">{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Liked' : 'Like' : 'Like'}} ({{$like->where('post_id','=',$post->id)->count()}})</a>
-          <a href = "/dislike/{{$post->id}}" class="btn btn-danger dislike">{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Disliked' : 'Dislike' : 'Dislike'}} ({{$dislike->where('post_id','=',$post->id)->count()}})</a>
+        <form action="{{ route('post.likePost',$post->id) }}" method="GET">
+          @csrf
+          @method('DELETE')
+        <input type="hidden" name="islike" value="{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 1 : 0 : 0}}"> 
+      <button type="submit" id="{{$post->id}}" class="btn btn-success like"><span id="checkLike">{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Liked' : 'Like' : 'Like'}}</span> <span id="countLike">({{$like->where('post_id','=',$post->id)->count()}})</span></button>
+      </form>
+      <form action="{{ route('post.dislikePost',$post->id) }}" method="GET">
+        @csrf
+        @method('DELETE')
+        <input type="hidden" name="isdislike" value="{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 1 : 0 : 0}}"> 
+      <button type="submit" id="{{$post->id}}" class="btn btn-danger dislike"><span id="checkDislike">{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Disliked' : 'Dislike' : 'Dislike'}}</span> <span id="countDislike">({{$dislike->where('post_id','=',$post->id)->count()}})</span></button>
+      </form>
         @endif
 
         <hr>
@@ -48,11 +60,11 @@
           <div class="card my-4">
             <h5 class="card-header">Leave a Comment:</h5>
             <div class="card-body">
-              <form action="{{ route('comments.store') }}" method="post">
+              <form action="{{ route('comments.store') }}" method="post" id="addComment">
                 @csrf
                 <input type="hidden" name="post_id" value="{{$post->id}}">
                 <div class="form-group">
-                  <textarea class="form-control" rows="3" name="body"></textarea>
+                  <textarea class="form-control body" rows="3" name="body"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
               </form>
@@ -64,6 +76,7 @@
           </div>
         @endif
         <!-- Single Comment -->
+        <div class="comment-section">
         @foreach($comments as $comment)
           <div class="media mb-4">
             <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
@@ -73,6 +86,7 @@
             </div>
           </div>
         @endforeach
+        </div>
       </div>
 
       <!-- Sidebar Widgets Column -->

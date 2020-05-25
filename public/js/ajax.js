@@ -33,43 +33,60 @@ $(document).on('click', '.delete', function () {
 //     }
 // }
 $('.like').on('click',function(event){
-    event.preventDefault();
     let post_id = $(this).attr('id')
-    let user_id = $('.user_id').attr('id')
-    let islike = $(this).val()
-    let type = "";
-    let likeCount = 0
-    let str =  $(this).find('#countLike').text()
-    let len =  $(this).find('#countLike').text().length-1
-    likeCount = str.slice(1,len)
-    if($(this).find('#checkLike').text() == "Like"){
-        $(this).prev().val('1')
-        islike = 1; // will be stored as true if post is not like yet
-        let totalCount = Number(likeCount) + 1 // increment the total likes
-        $(this).find('#countLike').text('(' + totalCount + ')') // next task, like unlike doesnt work, 
-        $(this).find('#checkLike').text('Liked')
-        type = "GET"; // store like
-    }else{
-        $(this).prev().val('0')
-        islike = 0
-        let totalCount = Number(likeCount) - 1
-        $(this).find('#countLike').text('(' + totalCount + ')')
-        $(this).find('#checkLike').text('Like')
-        type = "PUT"; // update like
-    }
-    console.log(post_id)
-    $.ajax({
-        type: type,
-        url: '/like/'+post_id,
-        data: {
-            post_id: post_id,
-            user_id: user_id,
-            islike: islike
-        },
-        success: function(data){
+    // if($(this).find('#checkLike').text() != "Like"){
+    //     console.log('passed')
+    //     $.ajax({
+    //         method: "POST",
+    //         url: "/like/"+post_id,
+    //         headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         },
+    //         data: {
+    //             _method: "DELETE"
+    //         },
+    //         success: function (data) {
+    //             // window.location.href = window.location.origin+"/post"
+    //         },
+    //         error: function (data) {
+    //             console.log('Error:', data);
+    //         }
+    //     });   
+    // }
+    // event.preventDefault();
+    // let post_id = $(this).attr('id')
+    // let user_id = $('.user_id').attr('id')
+    // let islike = $(this).val()
+    // let likeCount = 0
+    // let str =  $(this).find('#countLike').text()
+    // let len =  $(this).find('#countLike').text().length-1
+    // likeCount = str.slice(1,len)
+    // if($(this).find('#checkLike').text() == "Like"){
+    //     $(this).prev().val('1')
+    //     islike = 1; // will be stored as true if post is not like yet
+    //     let totalCount = Number(likeCount) + 1 // increment the total likes
+    //     $(this).find('#countLike').text('(' + totalCount + ')') // next task, like unlike doesnt work, 
+    //     $(this).find('#checkLike').text('Liked')
+    // }else{
+    //     // $(this).prev().val('0')
+    //     islike = 0
+    //     let totalCount = Number(likeCount) - 1
+    //     $(this).find('#countLike').text('(' + totalCount + ')')
+    //     $(this).find('#checkLike').text('Like')
+    // }
+    // console.log(post_id)
+    // $.ajax({
+    //     type: "GET",
+    //     url: '/like/'+post_id,
+    //     data: {
+    //         post_id: post_id,
+    //         user_id: user_id,
+    //         islike: islike
+    //     },
+    //     success: function(data){
             
-        },
-      });    
+    //     },
+    //   });    
 })
 
 $('.dislike').on('click',function(event){
@@ -103,3 +120,31 @@ $('.dislike').on('click',function(event){
     //     $(this).text('Liked')
     // })
 })
+
+// comment
+$(document).on('submit', '#addComment', function(e){
+    e.preventDefault();
+    let commentBody = $('.body').val()
+    let commentName = $('.user_name').attr('id');
+    console.log(commentName)
+    console.log(commentBody)
+    $.ajax({
+        type: "POST",
+        url: "/comments",
+        data: $("#addComment").serialize(),
+        success: function(response){
+            var commentText =  `<div class="media mb-4">
+            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
+            <div class="media-body">
+              <h5 class="mt-0">`+commentName+`</h5>
+              `+commentBody+`
+            </div>
+          </div>`;
+            $('.comment-section').append(commentText);
+            
+        },
+        error: function(error){
+            console.log(error)
+        }
+    })
+  });

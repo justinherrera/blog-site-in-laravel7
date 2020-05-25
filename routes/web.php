@@ -30,6 +30,6 @@ Route::get('/like','PostController@likePost')->name('like');
 // Route::get('image-upload', 'ImageUploadController@imageUpload')->name('image.upload');
 // Route::post('image-upload', 'ImageUploadController@imageUploadPost')->name('image.upload.post');
 
-Route::get('/like/{id}', 'PostController@likePost');
+Route::get('/like/{id}', 'PostController@likePost')->name('post.likePost');
 // Route::get('/like/{id}', 'PostController@updatelikePost');
-Route::get('/dislike/{id}', 'PostController@dislikePost');
+Route::get('/dislike/{id}', 'PostController@dislikePost')->name('post.dislikePost');
