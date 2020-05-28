@@ -23,102 +23,89 @@ $(document).on('click', '.delete', function () {
         }
     });
 });
-// let checkLike = document.querySelectorAll('#checkLike');
-// for(let i = 0; i <checkLike.length; i++){
-//     if(checkLike[i].textContent == "Like"){
-//         $('.like-icon').addClass('far fa-thumbs-up');
-//     }else{
-//         console.log(checkLike[i].textContent)
-//        $('.like-icon').addClass('fas fa-thumbs-up');
-//     }
-// }
-$('.like').on('click',function(event){
+// for like and unlike
+$('.like').on('click', function(e){
+    e.preventDefault();
+    let _this = this
     let post_id = $(this).attr('id')
-    // if($(this).find('#checkLike').text() != "Like"){
-    //     console.log('passed')
-    //     $.ajax({
-    //         method: "POST",
-    //         url: "/like/"+post_id,
-    //         headers: {
-    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //         },
-    //         data: {
-    //             _method: "DELETE"
-    //         },
-    //         success: function (data) {
-    //             // window.location.href = window.location.origin+"/post"
-    //         },
-    //         error: function (data) {
-    //             console.log('Error:', data);
-    //         }
-    //     });   
-    // }
-    // event.preventDefault();
-    // let post_id = $(this).attr('id')
-    // let user_id = $('.user_id').attr('id')
-    // let islike = $(this).val()
-    // let likeCount = 0
-    // let str =  $(this).find('#countLike').text()
-    // let len =  $(this).find('#countLike').text().length-1
-    // likeCount = str.slice(1,len)
-    // if($(this).find('#checkLike').text() == "Like"){
-    //     $(this).prev().val('1')
-    //     islike = 1; // will be stored as true if post is not like yet
-    //     let totalCount = Number(likeCount) + 1 // increment the total likes
-    //     $(this).find('#countLike').text('(' + totalCount + ')') // next task, like unlike doesnt work, 
-    //     $(this).find('#checkLike').text('Liked')
-    // }else{
-    //     // $(this).prev().val('0')
-    //     islike = 0
-    //     let totalCount = Number(likeCount) - 1
-    //     $(this).find('#countLike').text('(' + totalCount + ')')
-    //     $(this).find('#checkLike').text('Like')
-    // }
-    // console.log(post_id)
-    // $.ajax({
-    //     type: "GET",
-    //     url: '/like/'+post_id,
-    //     data: {
-    //         post_id: post_id,
-    //         user_id: user_id,
-    //         islike: islike
-    //     },
-    //     success: function(data){
-            
-    //     },
-    //   });    
+    let user_id = $('.user_id').attr('id')
+    let countLike = $(_this).find('#countLike').text()
+    let totalCountLike = Number(countLike.slice(1,countLike.length-1))
+    let status = ""
+    let data = {}
+    console.log(post_id)
+    if($(this).find('#checkLike').text() == "Like"){
+        totalCountLike += 1
+        $(_this).find('#countLike').text('('+totalCountLike+')')
+        console.log('true')
+        status = 'Liked'
+        data = {
+            isLike: 1,
+            post_id: post_id,
+            user_id: user_id,
+        }
+        $.ajax({
+            method: 'GET',
+            url : '/like/'+post_id,
+            data : data
+        }).done(function(){
+            $(_this).find('#checkLike').text(status) 
+        })
+        var header = {}
+    }
+    else{
+        totalCountLike -= 1
+        $(_this).find('#countLike').text('('+totalCountLike+')')
+        status = 'Like'
+        $.ajax({
+            method: 'GET',
+            url : '/unlike/'+post_id,
+        }).done(function(){
+            $(_this).find('#checkLike').text(status) 
+        })
+    }
 })
 
-$('.dislike').on('click',function(event){
-    let like = $('.like').first().text()
-    if( like == "Liked"){
-        like = $('.like').first().text("Like")
-        $(this).text('Disliked')
-    }else{
-        if($(this).text() == "Dislike"){
-            $(this).text('Disliked')
-        }else{
-            $(this).text('Dislike')
+$('.dislike').on('click', function(e){
+    e.preventDefault();
+    let _this = this
+    let post_id = $(this).attr('id')
+    let user_id = $('.user_id').attr('id')
+    let countDislike = $(_this).find('#countDislike').text()
+    let totalcountDislike = Number(countDislike.slice(1,countDislike.length-1))
+    let status = ""
+    let data = {}
+    console.log(post_id)
+    if($(this).find('#checkDislike').text() == "Dislike"){
+        totalcountDislike += 1
+        $(_this).find('#countDislike').text('('+totalcountDislike+')')
+        console.log('true')
+        status = 'Disliked'
+        data = {
+            isLike: 1,
+            post_id: post_id,
+            user_id: user_id,
         }
-        
+        $.ajax({
+            method: 'GET',
+            url : '/dislike/'+post_id,
+            data : data
+        }).done(function(){
+            $(_this).find('#checkDislike').text(status) 
+        })
+        var header = {}
     }
-    console.log(event)
-    // event.preventDefault()
-    // post_id = $(this).parents('.post-section').attr('id').substr(5)
-    // let isLike = $(this).prev()
-    // console.log(isLike)
-    // $(this).text('Liked')
-    // $.ajax({
-    //     method: 'POST',
-    //     url : urlLike,
-    //     data : {
-    //         isLike: isLike,
-    //         postId: postId,
-    //         _token: token
-    //     }
-    // }).done(function(){
-    //     $(this).text('Liked')
-    // })
+    else{
+        totalcountDislike -= 1
+        $(_this).find('#countDislike').text('('+totalcountDislike+')')
+        status = 'Dislike'
+        $.ajax({
+            method: 'GET',
+            url : '/undislike/'+post_id,
+        }).done(function(){
+            $(_this).find('#checkDislike').text(status) 
+        })
+    }
 })
 
 // comment

@@ -166,7 +166,7 @@ class PostController extends Controller
             'post_id' => $id,
         ])->first(); // like once
        
-        if($request->get('islike') == 0){
+        if($request->get('islike') == 0){ // if user has not liked the post yet
             
             $islike = 1;
             if(empty($like_user->user_id)){ //
@@ -178,18 +178,20 @@ class PostController extends Controller
                     'islike' => 1
                 ]);
                 $like->save();
-                return redirect()->back();
+                
             }
-        }else{
-            $islike = 0;
-            $post_id = $id;
-            $like = Auth::user()->likes()->where('post_id', $id)->first();
-            $like->delete();
-            return redirect()->back();
-            
         }
-        return redirect()->back();
-
+        // else{
+        //     $islike = 0;
+        //     $post_id = $id;
+        //     $like = Auth::user()->likes()->where('post_id', $id)->first();
+        //     $like->delete();
+        // }
+    }
+    public function unlikePost(Request $request, $id){
+        $post_id = $id;
+        $like = Auth::user()->likes()->where('post_id', $id)->first();
+        $like->delete();    
     }
     public function dislikePost(Request $request, $id){
         $user = Auth::user()->id;
@@ -209,16 +211,20 @@ class PostController extends Controller
                     'post_id' => $post_id,
                 ]);
                 $dislike->save();
-                return redirect()->back();
             }
-        }else{
-            $dislike = 0;
-            $post_id = $id;
-            $dislike = Auth::user()->dislikes()->where('post_id', $id)->first();
-            $dislike->delete();
-            return redirect()->back();
-            
         }
-        return redirect()->back();
+        // else{
+        //     $dislike = 0;
+        //     $post_id = $id;
+        //     $dislike = Auth::user()->dislikes()->where('post_id', $id)->first();
+        //     $dislike->delete();
+        //     return redirect()->back();
+            
+        // }
+    }
+    public function undislikePost(Request $request, $id){
+        $post_id = $id;
+        $dislike = Auth::user()->dislikes()->where('post_id', $id)->first();
+        $dislike->delete();  
     }
 }
