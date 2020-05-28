@@ -41,6 +41,7 @@
           <a id="{{$post->id}}" class="btn btn-danger dislike"><span id="checkDislike">{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Disliked' : 'Dislike' : 'Dislike'}}</span> <span id="countDislike">({{$dislike->where('post_id','=',$post->id)->count()}})</span></a>
           </form>
             @endif
+            <p>Comments: {{ $comments->where('post_id','=',$post->id)->count() }}</p>
           </div>
           <div class="card-footer text-muted">
             Posted {{$post->created_at->diffForHumans() }} by
@@ -65,7 +66,7 @@
 
         <!-- Search Widget -->
         <div class="card my-4 ">
-          <h5 class="card-header">Search</h5>
+          <h5 class="card-header">Search Post</h5>
           <div class="card-body">
             <form action="/search" method="get">
             <div class="input-group">   

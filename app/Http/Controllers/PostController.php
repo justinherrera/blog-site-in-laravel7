@@ -30,8 +30,9 @@ class PostController extends Controller
         $cats = Catrgory::all();
         $like = Like::all();
         $dislike = Dislike::all();
+        $comments = Comments::all();
         //dd($like->where('user_id',Auth::user()->id)); // next task check if user alerady liked the post
-        return view('posts.index', compact('posts','cats','like','dislike'));
+        return view('posts.index', compact('posts','cats','like','dislike','comments'));
         // $user_id = auth()->user()->id;
         // $user = User::findOrFail($user_id);
         
@@ -39,9 +40,15 @@ class PostController extends Controller
     }
     public function search(Request $request){
         $search = $request->get('search');
-        $posts = Post::where('title','like',"%$search%")->paginate(2);
+        $user = User::where('name','like',"%$search%")->first();
+        //dd($user); find out on how to change the index layout when searching name result
+        $posts = Post::where('title','like',"%$search%")
+                    ->orWhere('body','like',"%$search%")
+                    ->paginate(2);
+        $like = Like::all();
+        $dislike = Dislike::all();
         $cats = Catrgory::all();
-        return view('posts.index', compact('posts','cats'));
+        return view('posts.index', compact('posts','cats','like','dislike'));
     }
     /**
      * Show the form for creating a new resource.
@@ -132,15 +139,16 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required',
             'body' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        $imageName = time().'.'.$request->image->extension();  
-   
-        $path = $request->file('image')->storeAs('public/images',$imageName);
         $post = Post::find($id);
         $post->title =  $request->get('title');
         $post->body =  $request->get('body');
-        $post->image = $imageName;
+        if ($request->hasFile('image')) {
+            $imageName = time().'.'.$request->image->extension();  
+            $path = $request->file('image')->storeAs('public/images',$imageName);
+            $post->image = $imageName;
+        }
         $post->save();
         return redirect('/post');
     }
