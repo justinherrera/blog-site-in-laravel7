@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Nunito);@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css?family=Nunito);
 
 /*!
  * Bootstrap v4.5.0 (https://getbootstrap.com/)
@@ -505,7 +505,7 @@ mark,
 
 .img-fluid {
   max-width: 100%;
-  height: auto;
+  height: 100%;
 }
 
 .img-thumbnail {

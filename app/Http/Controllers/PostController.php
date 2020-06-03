@@ -10,6 +10,7 @@ use App\Catrgory;
 use App\Like;
 use App\Dislike;
 use App\Comments;
+use App\Category;
 use Auth;
 class PostController extends Controller
 {
@@ -23,32 +24,36 @@ class PostController extends Controller
     // {
 	//     $this->middleware('auth'); 
     // }
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['index','show']]); 
+    }
     public function index()
     {
         // for public posts
-        $posts = Post::orderBy('created_at','desc')->paginate(2);
+        $posts = Post::orderBy('created_at','desc')->paginate(8);
         $cats = Catrgory::all();
         $like = Like::all();
         $dislike = Dislike::all();
         $comments = Comments::all();
-        //dd($like->where('user_id',Auth::user()->id)); // next task check if user alerady liked the post
-        return view('posts.index', compact('posts','cats','like','dislike','comments'));
-        // $user_id = auth()->user()->id;
-        // $user = User::findOrFail($user_id);
-        
-        // return view('posts.index')->with('posts', $user->posts);
+        $latestPosts = Post::orderBy('created_at','desc')->take(3)->get();
+        $cat = Catrgory::findOrFail(1); // get food posts
+        $foodPosts = $cat->posts()->orderBy('created_at','desc')->take(8)->get();
+        return view('posts.index', compact('posts','cats','like','dislike','comments','latestPosts'));
     }
     public function search(Request $request){
         $search = $request->get('search');
         $user = User::where('name','like',"%$search%")->first();
+        $latestPosts = Post::orderBy('created_at','desc')->take(3)->get();
+        $comments = Comments::all();
         //dd($user); find out on how to change the index layout when searching name result
         $posts = Post::where('title','like',"%$search%")
                     ->orWhere('body','like',"%$search%")
-                    ->paginate(2);
+                    ->paginate(10);
         $like = Like::all();
         $dislike = Dislike::all();
         $cats = Catrgory::all();
-        return view('posts.index', compact('posts','cats','like','dislike'));
+        return view('posts.search', compact('posts','cats','like','dislike','latestPosts','comments'));
     }
     /**
      * Show the form for creating a new resource.
@@ -101,7 +106,7 @@ class PostController extends Controller
        
         $post = Post::find($id);
         $cat = Catrgory::findOrFail($post->cat_id);
-        $relatedPosts = $cat->posts()->orderBy('created_at','desc')->get();
+        $relatedPosts = $cat->posts()->orderBy('created_at','desc')->take(3)->get();
         $cats = Catrgory::all();
         $likeCtr = Like::where([
             'post_id' => $post->id
@@ -112,7 +117,8 @@ class PostController extends Controller
         $like = Like::all();
         $dislike = Dislike::all();
         $comments = Comments::where('post_id', '=', $post->id)->get();
-        return view('posts.show', compact('post','cats','likeCtr','dislikeCtr','like','dislike','comments','relatedPosts'));
+        $commentCount = $comments->count();
+        return view('posts.show', compact('post','cats','likeCtr','dislikeCtr','like','dislike','comments','relatedPosts','commentCount'));
     }
 
     /**
@@ -124,6 +130,9 @@ class PostController extends Controller
     public function edit($id)
     {
         $post = Post::find($id);
+        if(auth()->user()->id !== $post->user_id){
+            return redirect()->back();
+        }
         return view('posts.edit', compact('post'));
     }
 

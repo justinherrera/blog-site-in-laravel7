@@ -15,10 +15,19 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('fonts/ionicons/css/ionicons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('fonts/fontawesome/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('fonts/flaticon/font/flaticon.css') }}">
     <script src="https://kit.fontawesome.com/2e383d8019.js" crossorigin="anonymous"></script>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300, 400,700" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('theme_css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('theme_css/bootstrap.css.map') }}">
+    <link rel="stylesheet" href="{{ asset('theme_css/animate.css') }}">
+    <link rel="stylesheet" href="{{ asset('theme_css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('theme_css/style.css') }}" rel="stylesheet">
 </head>
 <body>
     
@@ -52,5 +61,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     <script src="{{ asset('js/ajax.js') }}"></script>
+    <script src="{{ asset('theme_js/jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ asset('theme_js/jquery-migrate-3.0.0.js') }}"></script>
+    <script src="{{ asset('theme_js/popper.min.js') }}"></script>
+    <script src="{{ asset('theme_js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('theme_js/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('theme_js/jquery.waypoints.min.js') }}"></script>
+    <script src="{{ asset('theme_js/jquery.stellar.min.js') }}"></script>
+
+    
+    <script src="{{ asset('theme_js/main.js') }}"></script>
 </body>
 </html>
