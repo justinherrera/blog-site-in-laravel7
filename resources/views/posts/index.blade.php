@@ -61,7 +61,11 @@
             @forelse($posts as $post)
             <div class="col-md-6">
               <a href="/post/{{ $post->id }}" class="blog-entry element-animate" data-animate-effect="fadeIn">
-                <img src="storage/images/resized/{{$post->image}}" alt="Image placeholder">
+                @if(!is_null($post->image))
+                <img src="storage/images/resized/post/{{$post->image}}" alt="Image placeholder"> 
+                @else 
+                <img src="storage/images/resized/default_post.png" alt="Image placeholder"> 
+                @endif
                 <div class="blog-content-body">
                   <div class="post-meta">
                     <span class="category">{{$post->category->category}}</span>
@@ -108,7 +112,7 @@
           @if(!Auth::guest())
           <div class="sidebar-box">
             <div class="bio text-center">
-              <img src="storage/images/{{Auth::user()->avatar}}" alt="Image Placeholder" class="img-fluid">
+              <img src="storage/images/resized/user/{{Auth::user()->avatar}}" alt="Image Placeholder" class="img-fluid">
               <div class="bio-body">
                 
                 <h2>{{Auth::user()->name}}</h2>

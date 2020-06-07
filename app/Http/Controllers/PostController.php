@@ -79,7 +79,7 @@ class PostController extends Controller
             'title' => 'required',
             'body' => 'required',
             'category' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10000',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:10000',
         ]);
         $post = new Post([
             'title' => $request->get('title'),
@@ -93,7 +93,7 @@ class PostController extends Controller
             // Image::make($path)->resize(130, 100);   
             $image = $request->file('image');
             $filename = time() . '.' . $image->getClientOriginalExtension();
-            Image::make($image)->fit(350,247)->save(public_path('/storage/images/resized/'.$filename));
+            Image::make($image)->fit(350,247)->save(public_path('/storage/images/resized/post/'.$filename));
             Image::make($image)->save(public_path('/storage/images/'.$filename));
             $post->image = $filename;
         }

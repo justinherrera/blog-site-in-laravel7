@@ -25,9 +25,11 @@
           <div class="post-content-body">
             <br>
             <div class="row mb-5">
+              @if(file_exists(public_path('/storage/images/'.$post->image)))
               <div class="col-md-12 mb-4 element-animate">
                 <img src="/storage/images/{{$post->image}}" alt="Image placeholder" class="img-fluid">
               </div>
+              @endif
             </div>
             <p>{{$post->body}}</p>
           </div>
@@ -109,7 +111,7 @@
           @if(!Auth::guest())
           <div class="sidebar-box">
             <div class="bio text-center">
-              <img src="/storage/images/{{Auth::user()->avatar}}" alt="Image Placeholder" class="img-fluid">
+              <img src="/storage/images/resized/user/{{Auth::user()->avatar}}" alt="Image Placeholder" class="img-fluid">
               <div class="bio-body">
                 <h2>{{Auth::user()->name}}</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem facilis sunt repellendus excepturi beatae porro debitis voluptate nulla quo veniam fuga sit molestias minus.</p>

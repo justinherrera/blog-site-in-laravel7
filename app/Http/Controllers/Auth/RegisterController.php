@@ -78,7 +78,8 @@ class RegisterController extends Controller
             // Image::make($path)->resize(130, 100);   
             $avatar = $request->file('image');
             $filename = time() . '.' . $avatar->getClientOriginalExtension();
-            Image::make($avatar)->resize(130,100)->save(public_path('/storage/images/'.$filename));
+            Image::make($avatar)->fit(100,100)->save(public_path('/storage/images/resized/user/'.$filename));
+            Image::make($avatar)->save(public_path('/storage/images/user/'.$filename));
             $user->avatar = $filename;
         }
         // else{
