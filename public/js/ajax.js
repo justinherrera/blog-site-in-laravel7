@@ -88,7 +88,6 @@ $('.dislike').on('click', function(e){
     console.log(post_id)
     if($(this).find('#checkDislike').text() == "Dislike"){
         if($('#post-'+post_id).find('#checkLike').text() == "Liked"){
-            totalCountLike -= 1
             $('#post-'+post_id).find('#countLike').text('('+totalCountLike+')')
             $.ajax({
                 method: 'GET',

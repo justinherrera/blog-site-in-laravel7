@@ -12,6 +12,7 @@ use App\Dislike;
 use App\Comments;
 use App\Category;
 use Auth;
+use Image;
 class PostController extends Controller
 {
     /**
@@ -78,19 +79,30 @@ class PostController extends Controller
             'title' => 'required',
             'body' => 'required',
             'category' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10000',
         ]);
-          
-        $imageName = time().'.'.$request->image->extension();  
-   
-        $path = $request->file('image')->storeAs('public/images',$imageName);
         $post = new Post([
             'title' => $request->get('title'),
             'body'  => $request->get('body'),
-            'cat_id' => $request->get('category'),
-            'image' => $imageName
+            'cat_id' => $request->get('category')
             ]);
         $post->user_id = auth()->user()->id;
+        if ($request->hasFile('image')) {
+            // $imageName = time().'.'.$request->image->extension();  
+            // $path = $request->file('image')->storeAs('public/images',$imageName);
+            // Image::make($path)->resize(130, 100);   
+            $image = $request->file('image');
+            $filename = time() . '.' . $image->getClientOriginalExtension();
+            Image::make($image)->fit(350,247)->save(public_path('/storage/images/resized/'.$filename));
+            Image::make($image)->save(public_path('/storage/images/'.$filename));
+            $post->image = $filename;
+        }
+        // else{
+        //     $post->image = $filename;
+        // }
+        // $imageName = time().'.'.$request->image->extension();  
+   
+        // $path = $request->file('image')->storeAs('public/images',$imageName);
         $post->save();
         return redirect('/post');
     }

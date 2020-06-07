@@ -80,9 +80,10 @@ class RegisterController extends Controller
             $filename = time() . '.' . $avatar->getClientOriginalExtension();
             Image::make($avatar)->resize(130,100)->save(public_path('/storage/images/'.$filename));
             $user->avatar = $filename;
-        }else{
-            $user->avatar = $filename;
         }
+        // else{
+        //     $user->avatar = $filename;
+        // }
         $user->save();
         return $user;
         // if ($request->hasFile('image')) {

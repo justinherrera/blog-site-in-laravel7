@@ -61,7 +61,7 @@
             @forelse($posts as $post)
             <div class="col-md-6">
               <a href="/post/{{ $post->id }}" class="blog-entry element-animate" data-animate-effect="fadeIn">
-                <img src="storage/images/{{$post->image}}" alt="Image placeholder">
+                <img src="storage/images/resized/{{$post->image}}" alt="Image placeholder">
                 <div class="blog-content-body">
                   <div class="post-meta">
                     <span class="category">{{$post->category->category}}</span>
@@ -141,7 +141,7 @@
                     <a href="/post/{{$latestPost->id}}">
                     <img src="storage/images/{{$latestPost->image}}" alt="Image placeholder" class="mr-4">
                     <div class="text">
-                      <h4>{{ Str::words($latestPost->title,2) }}</h4>
+                      <h4>{{ Str::words($latestPost->title,2) }}{{$latestPost->title}}</h4>
                       <div class="post-meta">
                         <span class="mr-2">{{$latestPost->created_at->diffForHumans() }}</span> &bullet;
                         <span class="ml-2"><span class="far fa-thumbs-up"></span>  {{ $like->where('post_id','=',$latestPost->id)->count() }}</span>

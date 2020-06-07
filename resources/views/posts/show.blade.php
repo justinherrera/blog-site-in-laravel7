@@ -16,10 +16,10 @@
                       <span class="mr-2">{{$post->created_at->diffForHumans() }}</span> &bullet;
                       <span class="ml-2"><span class="fa fa-comments"></span>{{$commentCount}}</span>
                       @if(!Auth::guest())
-                      @if(Auth::user()->id == $post->user_id)
-                        <a href="/post/{{$post->id}}/edit" class="btn btn-success edit">Edit</a>
-                        <a  class="btn btn-danger delete">Delete</a>
-                      @endif
+                        @if(Auth::user()->id == $post->user_id)
+                          <a href="/post/{{$post->id}}/edit" class="btn btn-success edit">Edit</a>
+                          <a  class="btn btn-danger delete">Delete</a>
+                        @endif
                       @endif
                     </div>
           <div class="post-content-body">
@@ -106,13 +106,12 @@
             </form>
           </div>
           <!-- END sidebar-box -->
+          @if(!Auth::guest())
           <div class="sidebar-box">
             <div class="bio text-center">
               <img src="/storage/images/{{Auth::user()->avatar}}" alt="Image Placeholder" class="img-fluid">
               <div class="bio-body">
-                @if(!Auth::guest())
                 <h2>{{Auth::user()->name}}</h2>
-                @endif
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem facilis sunt repellendus excepturi beatae porro debitis voluptate nulla quo veniam fuga sit molestias minus.</p>
                 <p><a href="#" class="btn btn-primary btn-sm">Read my bio</a></p>
                 <p class="social">
@@ -124,6 +123,7 @@
               </div>
             </div>
           </div>
+          @endif
           <!-- END sidebar-box -->  
 
 
@@ -188,16 +188,16 @@
 
 
   </section>
-  <!-- END section -->
+{{-- 
     <div class="row post-section" id="post-{{$post->id}}">
 
-      <!-- Post Content Column -->
+
       <div class="col-lg-8">
 
-        <!-- Title -->
+
         <h1 class="mt-4">{{$post->title }}</h1>
 
-        <!-- Author -->
+
         <p class="lead">
           by
           <a href="/user/{{$post->user->id}}">{{ $post->user->name }}</a> |
@@ -206,7 +206,7 @@
 
         <hr>
 
-        <!-- Date/Time -->
+
         <p>{{$post->created_at->diffForHumans() }}</p>
         @if(!Auth::guest())
           @if(Auth::user()->id == $post->user_id)
@@ -216,14 +216,14 @@
         @endif
         <hr>
 
-        <!-- Preview Image -->
+
         <img class="img-fluid rounded"  src="/storage/images/{{$post->image}}" alt="">
 
         <hr>
 
-        <!-- Post Content -->
+
         <p class="lead">{{$post->body }}</p>
-        {{-- @if(!Auth::guest())
+        @if(!Auth::guest())
         <form action="{{ route('post.likePost',$post->id) }}" method="GET">
           @csrf
           @method('DELETE')
@@ -236,12 +236,12 @@
           <input type="hidden" name="isdislike" value="{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 1 : 0 : 0}}"> 
         <button type="submit" id="{{$post->id}}" class="btn btn-danger dislike"><span id="checkDislike">{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Disliked' : 'Dislike' : 'Dislike'}}</span> <span id="countDislike">({{$dislike->where('post_id','=',$post->id)->count()}})</span></button>
         </form>
-        @endif --}}
+        @endif
 
         <hr>
 
-        <!-- Comments Form -->
-        {{-- @if(!Auth::guest())
+
+        @if(!Auth::guest())
           <div class="card my-4">
             <h5 class="card-header">Leave a Comment:</h5>
             <div class="card-body">
@@ -259,8 +259,8 @@
           <div class="card my-4">
             <a href="/login">Login</a>
           </div>
-        @endif --}}
-        <!-- Single Comment -->
+        @endif
+
         <div class="comment-section">
         @foreach($comments as $comment)
           <div class="media mb-4">
@@ -274,10 +274,10 @@
         </div>
       </div>
 
-      <!-- Sidebar Widgets Column -->
+
       <div class="col-md-4">
 
-        <!-- Search Widget -->
+
         <div class="card my-4">
           <h5 class="card-header">Search</h5>
           <div class="card-body">
@@ -290,14 +290,13 @@
           </div>
         </div>
 
-        <!-- Categories Widget -->
         <div class="card my-4">
           <h5 class="card-header">Categories</h5>
           <div class="card-body">
             <div class="row">
               <div class="col-lg-12">    
                 <ul class="list-group">
-                  @foreach ($cats as $cat) <!-- show list of categories -->
+                  @foreach ($cats as $cat) 
                   <li class="list-group-item"><a href="/category/{{$cat->id}}">{{ $cat->category }}</a></li>
                   @endforeach
                 </ul>   
@@ -306,7 +305,6 @@
           </div>
         </div>
 
-        <!-- Side Widget -->
         <div class="card my-4">
           <h5 class="card-header">Related Posts</h5>
           <div class="card-body">
@@ -321,8 +319,8 @@
       </div>
 
     </div>
-    <!-- /.row -->
 
-  </div>
+
+  </div> --}}
 
 @endsection
