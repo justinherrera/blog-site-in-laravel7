@@ -88,23 +88,14 @@ class PostController extends Controller
             ]);
         $post->user_id = auth()->user()->id;
         if ($request->hasFile('image')) {
-            // $imageName = time().'.'.$request->image->extension();  
-            // $path = $request->file('image')->storeAs('public/images',$imageName);
-            // Image::make($path)->resize(130, 100);   
             $image = $request->file('image');
             $filename = time() . '.' . $image->getClientOriginalExtension();
             Image::make($image)->fit(350,247)->save(public_path('/storage/images/resized/post/'.$filename));
             Image::make($image)->save(public_path('/storage/images/'.$filename));
             $post->image = $filename;
         }
-        // else{
-        //     $post->image = $filename;
-        // }
-        // $imageName = time().'.'.$request->image->extension();  
-   
-        // $path = $request->file('image')->storeAs('public/images',$imageName);
         $post->save();
-        return redirect('/post');
+        return response()->json(array('success' => time(), 'last_insert_id' => $post->id), 200);
     }
 
     /**
@@ -157,6 +148,7 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $request->validate([
             'title' => 'required',
             'body' => 'required',
@@ -166,11 +158,14 @@ class PostController extends Controller
         $post->title =  $request->get('title');
         $post->body =  $request->get('body');
         if ($request->hasFile('image')) {
-            $imageName = time().'.'.$request->image->extension();  
-            $path = $request->file('image')->storeAs('public/images',$imageName);
-            $post->image = $imageName;
+            $image = $request->file('image');
+            $filename = time() . '.' . $image->getClientOriginalExtension();
+            Image::make($image)->fit(350,247)->save(public_path('/storage/images/resized/post/'.$filename));
+            Image::make($image)->save(public_path('/storage/images/'.$filename));
+            $post->image = $filename;
         }
         $post->save();
+        
         return redirect('/post');
     }
 
@@ -189,33 +184,21 @@ class PostController extends Controller
     public function likePost(Request $request, $id){
        
         $user = Auth::user()->id;
-        // $islike = 1;
         $like_user = Like::where([
             'user_id' => $user,
             'post_id' => $id,
         ])->first(); // like once
        
-        if($request->get('islike') == 0){ // if user has not liked the post yet
-            
-            $islike = 1;
             if(empty($like_user->user_id)){ //
                 $user = Auth::user()->id;
                 $post_id = $id;
                 $like = new Like([
                     'user_id' => $user,
                     'post_id' => $post_id,
-                    'islike' => 1
                 ]);
                 $like->save();
                 
             }
-        }
-        // else{
-        //     $islike = 0;
-        //     $post_id = $id;
-        //     $like = Auth::user()->likes()->where('post_id', $id)->first();
-        //     $like->delete();
-        // }
     }
     public function unlikePost(Request $request, $id){
         $post_id = $id;
@@ -224,32 +207,20 @@ class PostController extends Controller
     }
     public function dislikePost(Request $request, $id){
         $user = Auth::user()->id;
-        // $islike = 1;
         $dislike_user = Dislike::where([
             'user_id' => $user,
             'post_id' => $id,
         ])->first(); // like once
        
-        if($request->get('isdislike') == 0){
-            $isdislike = 1;
-            if(empty($dislike_user->user_id)){ //
-                $user = Auth::user()->id;
-                $post_id = $id;
-                $dislike = new Dislike([
-                    'user_id' => $user,
-                    'post_id' => $post_id,
-                ]);
+        if(empty($dislike_user->user_id)){ //
+            $user = Auth::user()->id;
+            $post_id = $id;
+            $dislike = new Dislike([
+                'user_id' => $user,
+                'post_id' => $post_id,
+            ]);
                 $dislike->save();
-            }
         }
-        // else{
-        //     $dislike = 0;
-        //     $post_id = $id;
-        //     $dislike = Auth::user()->dislikes()->where('post_id', $id)->first();
-        //     $dislike->delete();
-        //     return redirect()->back();
-            
-        // }
     }
     public function undislikePost(Request $request, $id){
         $post_id = $id;

@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@include('layouts.nav')
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -18,10 +17,15 @@
                     @forelse($posts as $post)
                 
                     <div class="card mb-4">
-                    <img class="card-img-top" src="/storage/images/{{$post->image}}" alt="Card image cap">
+                        @if(!is_null($post->image))
+                        <img src="/storage/images/{{$post->image}}" alt="Image placeholder"> 
+                        @else 
+                        <img src="/storage/images/default_post.jpg" alt="Image placeholders"> 
+                        @endif
+                    {{-- <img class="card-img-top" src="/storage/images/{{$post->image}}" alt="Card image cap"> --}}
                     <div class="card-body">
                         <h2 class="card-title">{{ $post->title }}</h2>
-                        <p class="card-text">{{ $post->body }}</p>
+                        <p class="card-text">{!! $post->body !!}</p>
                         <a  href="post/{{ $post->id }}" class="btn btn-primary">Read More →</a>
                     </div>
                     <div class="card-footer text-muted">

@@ -40,19 +40,17 @@ $('.like').on('click', function(e){
         if($('#post-'+post_id).find('#checkDislike').text() == "Disliked"){
             totalcountDislike -= 1
             $('#post-'+post_id).find('#countDislike').text('('+totalcountDislike+')')
+            $('#post-'+post_id).find('#checkDislike').text('Dislike')
             $.ajax({
                 method: 'GET',
                 url : '/undislike/'+post_id,
-            }).done(function(){
-                $('#post-'+post_id).find('#checkDislike').text('Dislike')
-            })
+            }).done(function(){})
         }
         totalCountLike += 1
         $(_this).find('#checkLike').text('Liked') 
         $(_this).find('#countLike').text('('+totalCountLike+')')
         console.log('true')
         data = {
-            isLike: 1,
             post_id: post_id,
             user_id: user_id,
         }
@@ -89,12 +87,11 @@ $('.dislike').on('click', function(e){
     if($(this).find('#checkDislike').text() == "Dislike"){
         if($('#post-'+post_id).find('#checkLike').text() == "Liked"){
             $('#post-'+post_id).find('#countLike').text('('+totalCountLike+')')
+            $('#post-'+post_id).find('#checkLike').text('Like') 
             $.ajax({
                 method: 'GET',
                 url : '/unlike/'+post_id,
-            }).done(function(){
-                $('#post-'+post_id).find('#checkLike').text('Like') 
-            })
+            }).done(function(){})
         }
         $(_this).find('#checkDislike').text('Disliked') 
         totalcountDislike += 1
@@ -102,7 +99,6 @@ $('.dislike').on('click', function(e){
         console.log('true')
         status = 'Disliked'
         data = {
-            isLike: 1,
             post_id: post_id,
             user_id: user_id,
         }
@@ -124,13 +120,80 @@ $('.dislike').on('click', function(e){
         }).done(function(){})
     }
 })
+//open modal
+$('.openModal').on('click',function(e){
+    $('#createPost').modal('show');
 
+})
+// post
+let latest_id = 0;
+$('#createPost').on('submit', '#addPost', function(e){
+    e.preventDefault();
+    let form = $('#addPost')[0]; 
+    let formData = new FormData(form);
+    let _this = this;
+    let title = $('.title').val()
+    let category = $('.category-select option:selected').text()
+    let image = $('#image').val()
+    let imageSrc = image.slice(12,image.length)
+    $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+    $.ajax({
+        type: "POST",
+        url: "/post",
+        processData: false,
+        contentType: false,
+        data: formData,
+        beforeSend: function(){
+            $('.save').text('Posting...');
+        },
+        success: function(response){
+            console.log(response)
+            latest_id = response.last_insert_id
+            // let date_source = Math.floor(new Date().getTime() / 1000) + imageSrc.slice(imageSrc.length-4)
+            let date_source = response.success + imageSrc.slice(imageSrc.length-4)
+            console.log(response.success)
+            console.log(imageSrc.slice(imageSrc.length-4))
+            var new_post =  `
+            <div class="col-md-6">
+                <a href="/post/`+latest_id+`" class="blog-entry element-animate fadeIn element-animated" data-animate-effect="fadeIn">
+                <img src="storage/images/resized/post/`+date_source.toString()+`" alt="Image placeholder"> 
+                                <div class="blog-content-body">
+                    <div class="post-meta">
+                    <span class="category">`+category+`</span>
+                    <span class="mr-2">seconds ago</span>
+                    <span class="ml-2"><span class="fa fa-comments" aria-hidden="true"></span> 0</span>
+                    </div>
+                    <h2>`+title+`</h2>
+                </div>
+                </a>
+            </div>`;
+            console.log(new_post)
+            $('.postSection').prepend(new_post);
+            $('#createPost').modal('hide');
+            $('.modal-backdrop').remove();
+            $('input').val('') // empty title area
+            $('textarea').val('')
+            $('.save').text('Posted');
+            // var tinymce_editor_id = 'exampleFormControlTextarea1'; 
+            // tinymce.get(tinymce_editor_id).setContent('');
+        },
+        error: function(error){
+            console.log(error)
+        }
+    })
+  });
 // comment
+
 $(document).on('submit', '#addComment', function(e){
     e.preventDefault();
     let commentBody = $('.body').val()
     let commentName = $('.user_name').attr('id');
     let totalComment = $('#totalComment').text();
+    let avatar = $('.avatar').attr('src')
     console.log(commentName)
     console.log(commentBody)
     $.ajax({
@@ -138,9 +201,10 @@ $(document).on('submit', '#addComment', function(e){
         url: "/comments",
         data: $("#addComment").serialize(),
         success: function(response){
+            console.log(avatar)
             var commentText =  `<li class="comment">
             <div class="vcard">
-            <img src="images/person_1.jpg" alt="Image placeholder">
+            <img src="`+avatar+`" alt="Image placeholder">
             </div>
             <div class="comment-body">
             <h3>`+commentName+`</h3>
@@ -158,3 +222,4 @@ $(document).on('submit', '#addComment', function(e){
         }
     })
   });
+

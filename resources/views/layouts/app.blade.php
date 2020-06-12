@@ -1,4 +1,7 @@
-<!doctype html>
+@php
+    header("Access-Control-Allow-Origin: *");
+@endphp
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -8,7 +11,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
-
+    {{-- WYSIWYG Editor Integration --}}
+    <script src="https://cdn.tiny.cloud/1/qtof8vieh1i6fqrfxu4nttn1nvoptxdmma913qe0911vkn5q/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
@@ -22,12 +26,17 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300, 400,700" rel="stylesheet">
+    {{-- <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300, 400,700" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('theme_css/bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ asset('theme_css/bootstrap.css.map') }}">
+    <link rel="stylesheet" href="{{ asset('theme_css/bootstrap.css.map') }}"> --}}
     <link rel="stylesheet" href="{{ asset('theme_css/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('theme_css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('theme_css/style.css') }}" rel="stylesheet">
+
+    <!-- BOOTSTRAP -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    {{-- <script src="//cdn.tinymce.com/4/tinymce.min.js"></script> --}}
 </head>
 <body>
     
@@ -53,13 +62,15 @@
         </nav> --}}
 
         <main class="py-4">
+            @if (!Route::is('login') && !Route::is('register'))  
+                @include('layouts.nav')
+            @endif
             @yield('content')
         </main>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="{{ asset('js/ajax.js') }}"></script>
     <script src="{{ asset('theme_js/jquery-3.2.1.min.js') }}"></script>
     <script src="{{ asset('theme_js/jquery-migrate-3.0.0.js') }}"></script>
@@ -69,7 +80,6 @@
     <script src="{{ asset('theme_js/jquery.waypoints.min.js') }}"></script>
     <script src="{{ asset('theme_js/jquery.stellar.min.js') }}"></script>
 
-    
     <script src="{{ asset('theme_js/main.js') }}"></script>
 </body>
 </html>

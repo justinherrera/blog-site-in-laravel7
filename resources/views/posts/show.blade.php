@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@include('layouts.nav')
 @section('content')
 <div class="container">
   @if(!Auth::guest())
@@ -17,34 +16,34 @@
                       <span class="ml-2"><span class="fa fa-comments"></span>{{$commentCount}}</span>
                       @if(!Auth::guest())
                         @if(Auth::user()->id == $post->user_id)
-                          <a href="/post/{{$post->id}}/edit" class="btn btn-success edit">Edit</a>
-                          <a  class="btn btn-danger delete">Delete</a>
+                          <a href="/post/{{$post->id}}/edit" class="edit">Edit</a>
+                          <a class="delete">Delete</a>
                         @endif
                       @endif
                     </div>
           <div class="post-content-body">
             <br>
             <div class="row mb-5">
-              @if(file_exists(public_path('/storage/images/'.$post->image)))
-              <div class="col-md-12 mb-4 element-animate">
-                <img src="/storage/images/{{$post->image}}" alt="Image placeholder" class="img-fluid">
-              </div>
+              @if(!is_null($post->image))
+              <img src="storage/images/resized/post/{{$post->image}}" alt="Image placeholder"> 
+              @else 
+              <img src="/storage/images/default_post.jpg" alt="Image placeholders"> 
               @endif
             </div>
-            <p>{{$post->body}}</p>
+            {!! $post->body !!}
           </div>
           @if(!Auth::guest())
           <form action="{{ route('post.likePost',$post->id) }}" method="GET">
             @csrf
             @method('DELETE')
           <input type="hidden" name="islike" value="{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 1 : 0 : 0}}"> 
-          <button type="submit" id="{{$post->id}}" class="btn btn-success like"><span id="checkLike">{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Liked' : 'Like' : 'Like'}}</span> <span id="countLike">({{$like->where('post_id','=',$post->id)->count()}})</span></button>
+          <a type="submit" id="{{$post->id}}" class="like"><span id="checkLike">{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Liked' : 'Like' : 'Like'}}</span> <span id="countLike">({{$like->where('post_id','=',$post->id)->count()}})</span></a>
           </form>
           <form action="{{ route('post.dislikePost',$post->id) }}" method="GET">
             @csrf
             @method('DELETE')
             <input type="hidden" name="isdislike" value="{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 1 : 0 : 0}}"> 
-          <button type="submit" id="{{$post->id}}" class="btn btn-danger dislike"><span id="checkDislike">{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Disliked' : 'Dislike' : 'Dislike'}}</span> <span id="countDislike">({{$dislike->where('post_id','=',$post->id)->count()}})</span></button>
+          <a type="submit" id="{{$post->id}}" class="dislike"><span id="checkDislike">{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Disliked' : 'Dislike' : 'Dislike'}}</span> <span id="countDislike">({{$dislike->where('post_id','=',$post->id)->count()}})</span></a>
           </form>
           @endif
           
@@ -63,7 +62,7 @@
               @foreach($comments as $comment)
               <li class="comment">
                 <div class="vcard">
-                  <img src="/storage/images/{{$comment->user->avatar}}" alt="Image placeholder">
+                  <img src="/storage/images/resized/user/{{$comment->user->avatar}}" class="avatar"alt="Image placeholder">
                 </div>
                 <div class="comment-body">
                   <h3>{{ $comment->user->name }}</h3>

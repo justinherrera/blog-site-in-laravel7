@@ -15,7 +15,7 @@ a {
 }
 
 a:hover {
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 h1, h2, h3, h4, h5 {
@@ -206,7 +206,50 @@ header .navbar .dropdown-menu a {
     border-bottom: none;
   }
 }
-
+.edit{
+  display: inline-block;
+    background: #28c75f;
+    padding: 2px 8px;
+    line-height: 1.5;
+    font-size: 12px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    color: #fff !important;
+    margin-right: 10px;
+}
+.delete{
+  display: inline-block;
+    background: #de3e35;
+    padding: 2px 8px;
+    line-height: 1.5;
+    font-size: 12px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    color: #fff !important;
+    margin-right: 10px;
+}
+.like{
+  display: inline-block;
+    background: #28c75f;
+    padding: 2px 8px;
+    line-height: 1.5;
+    font-size: 12px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    color: #fff !important;
+    margin-right: 10px;
+}
+.dislike{
+  display: inline-block;
+    background: #de3e35;
+    padding: 2px 8px;
+    line-height: 1.5;
+    font-size: 12px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    color: #fff !important;
+    margin-right: 10px;
+}
 .category {
   display: inline-block;
   background: #007bff;

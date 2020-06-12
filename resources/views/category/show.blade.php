@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@include('layouts.nav')
 @section('content')
    @if(!Auth::guest())
     <input type="hidden" class="user_id" id="{{Auth::user()->id}}"> <!-- to determine user id -->
@@ -58,7 +57,7 @@
           @if(!Auth::guest())
           <div class="sidebar-box">
             <div class="bio text-center">
-              <img src="storage/images/{{Auth::user()->avatar}}" alt="Image Placeholder" class="img-fluid">
+              <img src="/storage/images/resized/user/{{Auth::user()->avatar}}" alt="Image Placeholder" class="img-fluid">
               <div class="bio-body">
                 
                 <h2>{{Auth::user()->name}}</h2>

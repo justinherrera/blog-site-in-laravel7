@@ -47,6 +47,8 @@
                                     <label class="form-check-label" for="remember">
                                         {{ __('Remember Me') }}
                                     </label>
+
+                                    
                                 </div>
                             </div>
                         </div>
@@ -62,7 +64,12 @@
                                         {{ __('Forgot Your Password?') }}
                                     </a>
                                 @endif
-                            </div>
+                            </div>                            
+                        </div>
+                        <div class="col-md-8 offset-md-4">
+                            <a class="btn btn-link" href="/register">
+                                Create an Account
+                            </a>
                         </div>
                     </form>
                 </div>

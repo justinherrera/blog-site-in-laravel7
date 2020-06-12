@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@include('layouts.nav')
 @section('content')
    @if(!Auth::guest())
     <input type="hidden" class="user_id" id="{{Auth::user()->id}}"> <!-- to determine user id -->
@@ -57,14 +56,14 @@
       </div>
       <div class="row blog-entries">
         <div class="col-md-12 col-lg-8 main-content">
-          <div class="row">
+          <div class="row postSection">
             @forelse($posts as $post)
             <div class="col-md-6">
               <a href="/post/{{ $post->id }}" class="blog-entry element-animate" data-animate-effect="fadeIn">
                 @if(!is_null($post->image))
                 <img src="storage/images/resized/post/{{$post->image}}" alt="Image placeholder"> 
                 @else 
-                <img src="storage/images/resized/default_post.png" alt="Image placeholder"> 
+                <img src="storage/images/default_post.jpg" alt="Image placeholder"> 
                 @endif
                 <div class="blog-content-body">
                   <div class="post-meta">
@@ -90,11 +89,6 @@
               </nav>
             </div>
           </div>
-
-
-
-          
-
         </div>
 
         <!-- END main-content -->
@@ -123,7 +117,7 @@
                   Following:
                   Followers:
                 </p>
-                <p><a href="/post/create" class="btn btn-primary btn-sm">Create New Article</a></p>
+                <p><a class="btn btn-primary btn-sm openModal" data-backdrop="static">Create New Article</a></p>
                 <p class="social">
                   <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
                   <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
@@ -289,7 +283,74 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
       </div>
     </div>
   </footer>
+  <!-- Modal -->
+  <div class="modal fade" id="createPost" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add New Post</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="post" enctype="multipart/form-data" id="addPost">
+            @csrf
+            <div class="form-group">
+              <label for="exampleInputEmail1">Title</label>
+              <input type="text" class="form-control title" id="title" aria-describedby="emailHelp"  name="title" placeholder="Enter Title" autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Body</label>
+              <textarea class="form-control body" id="body" rows="3" name="body"></textarea>
+            </div>
+            <div class="form-group">
+              <select name="category" class="form-control category-select">
+                <option selected disabled>Choose Category</option>
+                @foreach ($cats as $cat)
+                   <option value="{{$cat->id}}" class="category-option">{{$cat->category}}</option> 
+                @endforeach
+              </select>
+            </div>
+            <div class="form-group">
+                <label for="image">Choose Image File</label>
+                <input type="file" name="image" class="form-control-file" id="image">
+            </div>
+            {{-- <button type="submit" class="btn btn-primary">Submit</button> --}}
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary save">Save changes</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+  
+  <script type="text/javascript">
+    // WYSIWYG Editor Integration
 
+    // tinymce.init({
+    //   selector: 'textarea',
+    //   height: 300,
+    //   menubar: false,
+    //   plugins: [
+    //     'advlist autolink lists link image charmap print preview anchor',
+    //     'searchreplace visualblocks code fullscreen',
+    //     'insertdatetime media table paste code help wordcount'
+    //   ],
+    //   toolbar: 'undo redo | formatselect | ' +
+    //   'bold italic backcolor | alignleft aligncenter ' +
+    //   'alignright alignjustify | bullist numlist outdent indent | ' +
+    //   'removeformat | help',
+    //   content_css: '//www.tiny.cloud/css/codepen.min.css'
+    // });
+
+
+
+  </script>
+  @endsection
     {{-- <div class="row">
 
       <!-- Blog Entries Column -->

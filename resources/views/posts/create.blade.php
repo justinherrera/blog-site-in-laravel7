@@ -1,14 +1,8 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
 @section('content')
 <div class="container">
     <a href="/post">Show Posts</a>
-    {{-- <form action="{{ route('post.store') }}" method="post">
-        @csrf
-        <input type="text" name="title" placeholder="Title">
-        <textarea name="body" cols="30" rows="10"></textarea>
-        <input type="submit">
-    </form> --}}
     <form action="{{ route('post.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
@@ -36,4 +30,4 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
-@endsection
+@endsection --}}
