@@ -61,7 +61,7 @@
             <div class="col-md-6">
               <a href="/post/{{ $post->id }}" class="blog-entry element-animate" data-animate-effect="fadeIn">
                 @if(!is_null($post->image))
-                <img src="storage/images/resized/post/{{$post->image}}" alt="Image placeholder"> 
+                <img src="/storage/images/resized/post/{{$post->image}}" alt="Image placeholder"> 
                 @else 
                 <img src="storage/images/default_post.jpg" alt="Image placeholder"> 
                 @endif
@@ -321,7 +321,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary save">Save changes</button>
+          <button type="submit" class="btn btn-primary save">Post</button>
         </div>
       </form>
       </div>
@@ -331,21 +331,21 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
   <script type="text/javascript">
     // WYSIWYG Editor Integration
 
-    // tinymce.init({
-    //   selector: 'textarea',
-    //   height: 300,
-    //   menubar: false,
-    //   plugins: [
-    //     'advlist autolink lists link image charmap print preview anchor',
-    //     'searchreplace visualblocks code fullscreen',
-    //     'insertdatetime media table paste code help wordcount'
-    //   ],
-    //   toolbar: 'undo redo | formatselect | ' +
-    //   'bold italic backcolor | alignleft aligncenter ' +
-    //   'alignright alignjustify | bullist numlist outdent indent | ' +
-    //   'removeformat | help',
-    //   content_css: '//www.tiny.cloud/css/codepen.min.css'
-    // });
+    tinymce.init({
+      selector: 'textarea',
+      height: 300,
+      menubar: false,
+      plugins: [
+        'advlist autolink lists link image charmap print preview anchor',
+        'searchreplace visualblocks code fullscreen',
+        'insertdatetime media table paste code help wordcount'
+      ],
+      toolbar: 'undo redo | formatselect | ' +
+      'bold italic backcolor | alignleft aligncenter ' +
+      'alignright alignjustify | bullist numlist outdent indent | ' +
+      'removeformat | help',
+      content_css: '//www.tiny.cloud/css/codepen.min.css'
+    });
 
 
 

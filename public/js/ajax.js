@@ -129,13 +129,14 @@ $('.openModal').on('click',function(e){
 let latest_id = 0;
 $('#createPost').on('submit', '#addPost', function(e){
     e.preventDefault();
+    if($('.save').text() == "Posted"){
+        $('.save').text('Post')
+    }
     let form = $('#addPost')[0]; 
     let formData = new FormData(form);
     let _this = this;
     let title = $('.title').val()
     let category = $('.category-select option:selected').text()
-    let image = $('#image').val()
-    let imageSrc = image.slice(12,image.length)
     $.ajaxSetup({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -144,6 +145,7 @@ $('#createPost').on('submit', '#addPost', function(e){
     $.ajax({
         type: "POST",
         url: "/post",
+        cache: false,
         processData: false,
         contentType: false,
         data: formData,
@@ -151,16 +153,11 @@ $('#createPost').on('submit', '#addPost', function(e){
             $('.save').text('Posting...');
         },
         success: function(response){
-            console.log(response)
             latest_id = response.last_insert_id
-            // let date_source = Math.floor(new Date().getTime() / 1000) + imageSrc.slice(imageSrc.length-4)
-            let date_source = response.success + imageSrc.slice(imageSrc.length-4)
-            console.log(response.success)
-            console.log(imageSrc.slice(imageSrc.length-4))
             var new_post =  `
             <div class="col-md-6">
                 <a href="/post/`+latest_id+`" class="blog-entry element-animate fadeIn element-animated" data-animate-effect="fadeIn">
-                <img src="storage/images/resized/post/`+date_source.toString()+`" alt="Image placeholder"> 
+                <img src="/storage/images/resized/post/`+response.image+`" alt="Image placeholder"> 
                                 <div class="blog-content-body">
                     <div class="post-meta">
                     <span class="category">`+category+`</span>
@@ -176,10 +173,10 @@ $('#createPost').on('submit', '#addPost', function(e){
             $('#createPost').modal('hide');
             $('.modal-backdrop').remove();
             $('input').val('') // empty title area
-            $('textarea').val('')
+            // $('textarea').val('')
             $('.save').text('Posted');
-            // var tinymce_editor_id = 'exampleFormControlTextarea1'; 
-            // tinymce.get(tinymce_editor_id).setContent('');
+            var tinymce_editor_id = 'exampleFormControlTextarea1'; 
+            tinymce.get(tinymce_editor_id).setContent('');
         },
         error: function(error){
             console.log(error)

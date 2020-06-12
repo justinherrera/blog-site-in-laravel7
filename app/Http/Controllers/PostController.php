@@ -95,7 +95,7 @@ class PostController extends Controller
             $post->image = $filename;
         }
         $post->save();
-        return response()->json(array('success' => time(), 'last_insert_id' => $post->id), 200);
+        return response()->json(array('image' => $post->image, 'last_insert_id' => $post->id), 200);
     }
 
     /**
