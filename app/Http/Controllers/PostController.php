@@ -50,6 +50,7 @@ class PostController extends Controller
         //dd($user); find out on how to change the index layout when searching name result
         $posts = Post::where('title','like',"%$search%")
                     ->orWhere('body','like',"%$search%")
+                    ->orderBy('created_at','desc')
                     ->paginate(10);
         $like = Like::all();
         $dislike = Dislike::all();

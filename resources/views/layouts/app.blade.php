@@ -26,9 +26,6 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    {{-- <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:300, 400,700" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('theme_css/bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ asset('theme_css/bootstrap.css.map') }}"> --}}
     <link rel="stylesheet" href="{{ asset('theme_css/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('theme_css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('theme_css/style.css') }}" rel="stylesheet">
@@ -41,26 +38,6 @@
 <body>
     
     <div id="app">
-        
-        {{-- <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/post') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
-
-                </div>
-            </div>
-        </nav> --}}
-
         <main class="py-4">
             @if (!Route::is('login') && !Route::is('register'))  
                 @include('layouts.nav')

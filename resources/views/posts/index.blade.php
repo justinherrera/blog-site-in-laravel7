@@ -18,7 +18,7 @@
                     <span class="mr-2">{{date('d-m-Y', strtotime($latestPost->created_at))}} </span> &bullet;
                     <span class="ml-2"><span class="fa fa-comments"></span> {{ $comments->where('post_id','=',$latestPost->id)->count() }}</span>
                   </div>
-                  <h3>{{$latestPost->title}}</p>
+                  <h3>{{ substr($latestPost->title,0,30) }}</p>
                 </div>
               </a>
             </div>
@@ -38,7 +38,7 @@
                 <span class="mr-2">{{$latestPost->created_at->diffForHumans() }} </span> &bullet;
                 <span class="ml-2"><span class="fa fa-comments"></span> {{ $comments->where('post_id','=',$latestPost->id)->count() }}</span>
               </div>
-              <h3>{{$latestPost->title}}</h3>
+              <h3>{{ substr($latestPost->title,0,10) }}</h3>
             </div>
           </a>
         </div>
@@ -63,7 +63,7 @@
                 @if(!is_null($post->image))
                 <img src="/storage/images/resized/post/{{$post->image}}" alt="Image placeholder"> 
                 @else 
-                <img src="storage/images/default_post.jpg" alt="Image placeholder"> 
+                <img src="/storage/images/resized/post/default_post_resized.jpg" alt="Image placeholder"> 
                 @endif
                 <div class="blog-content-body">
                   <div class="post-meta">
@@ -71,7 +71,8 @@
                     <span class="mr-2">{{$post->created_at->diffForHumans() }}</span> &bullet;
                     <span class="ml-2"><span class="fa fa-comments"></span> {{ $comments->where('post_id','=',$latestPost->id)->count() }}</span>
                   </div>
-                  <h2>{{ Str::words($post->title,9) }}</h2>
+                  <h2>{{ substr($post->title,0,30) }}</h2>
+                  <small>Posted by: {{  substr($post->user->name,0,10) }}</small>
                 </div>
               </a>
             </div>
@@ -139,7 +140,7 @@
                     <a href="/post/{{$latestPost->id}}">
                     <img src="storage/images/{{$latestPost->image}}" alt="Image placeholder" class="mr-4">
                     <div class="text">
-                      <h4>{{ Str::words($latestPost->title,2) }}{{$latestPost->title}}</h4>
+                      <h4>{{ substr($latestPost->title,0,20) }}</h4>
                       <div class="post-meta">
                         <span class="mr-2">{{$latestPost->created_at->diffForHumans() }}</span> &bullet;
                         <span class="ml-2"><span class="far fa-thumbs-up"></span>  {{ $like->where('post_id','=',$latestPost->id)->count() }}</span>

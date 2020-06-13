@@ -129,9 +129,6 @@ $('.openModal').on('click',function(e){
 let latest_id = 0;
 $('#createPost').on('submit', '#addPost', function(e){
     e.preventDefault();
-    if($('.save').text() == "Posted"){
-        $('.save').text('Post')
-    }
     let form = $('#addPost')[0]; 
     let formData = new FormData(form);
     let _this = this;
@@ -154,6 +151,9 @@ $('#createPost').on('submit', '#addPost', function(e){
         },
         success: function(response){
             latest_id = response.last_insert_id
+            if(response.image === null){
+                response.image = "default_post_resized.jpg"
+            }
             var new_post =  `
             <div class="col-md-6">
                 <a href="/post/`+latest_id+`" class="blog-entry element-animate fadeIn element-animated" data-animate-effect="fadeIn">
@@ -173,10 +173,14 @@ $('#createPost').on('submit', '#addPost', function(e){
             $('#createPost').modal('hide');
             $('.modal-backdrop').remove();
             $('input').val('') // empty title area
+            $('.category-select').val('Choose Category').change()
             // $('textarea').val('')
             $('.save').text('Posted');
-            var tinymce_editor_id = 'exampleFormControlTextarea1'; 
+            var tinymce_editor_id = 'body'; 
             tinymce.get(tinymce_editor_id).setContent('');
+            if($('.save').text() == "Posted"){
+                $('.save').text('Post')
+            }
         },
         error: function(error){
             console.log(error)
