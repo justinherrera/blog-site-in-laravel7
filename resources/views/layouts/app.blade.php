@@ -29,11 +29,11 @@
     <link rel="stylesheet" href="{{ asset('theme_css/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('theme_css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('theme_css/style.css') }}" rel="stylesheet">
-
     <!-- BOOTSTRAP -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     {{-- <script src="//cdn.tinymce.com/4/tinymce.min.js"></script> --}}
+    
 </head>
 <body>
     

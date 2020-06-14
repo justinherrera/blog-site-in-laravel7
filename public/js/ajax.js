@@ -36,18 +36,18 @@ $('.like').on('click', function(e){
     let status = ""
     let data = {}
     console.log(post_id)
-    if($(this).find('#checkLike').text() == "Like"){
-        if($('#post-'+post_id).find('#checkDislike').text() == "Disliked"){
+    if($(this).find('#checkLike').text() == "  Like"){
+        if($('#post-'+post_id).find('#checkDislike').text() ==   "  Disliked"){
             totalcountDislike -= 1
             $('#post-'+post_id).find('#countDislike').text('('+totalcountDislike+')')
-            $('#post-'+post_id).find('#checkDislike').text('Dislike')
+            $('#post-'+post_id).find('#checkDislike').text('  Dislike')
             $.ajax({
                 method: 'GET',
                 url : '/undislike/'+post_id,
             }).done(function(){})
         }
         totalCountLike += 1
-        $(_this).find('#checkLike').text('Liked') 
+        $(_this).find('#checkLike').text('  Liked') 
         $(_this).find('#countLike').text('('+totalCountLike+')')
         console.log('true')
         data = {
@@ -63,7 +63,7 @@ $('.like').on('click', function(e){
     }
     else{
         totalCountLike -= 1
-        $(_this).find('#checkLike').text('Like') 
+        $(_this).find('#checkLike').text('  Like') 
         $(_this).find('#countLike').text('('+totalCountLike+')')
         $.ajax({
             method: 'GET',
@@ -84,16 +84,16 @@ $('.dislike').on('click', function(e){
     let status = ""
     let data = {}
     console.log(post_id)
-    if($(this).find('#checkDislike').text() == "Dislike"){
-        if($('#post-'+post_id).find('#checkLike').text() == "Liked"){
+    if($(this).find('#checkDislike').text() == "  Dislike"){
+        if($('#post-'+post_id).find('#checkLike').text() == "  Liked"){
             $('#post-'+post_id).find('#countLike').text('('+totalCountLike+')')
-            $('#post-'+post_id).find('#checkLike').text('Like') 
+            $('#post-'+post_id).find('#checkLike').text('  Like') 
             $.ajax({
                 method: 'GET',
                 url : '/unlike/'+post_id,
             }).done(function(){})
         }
-        $(_this).find('#checkDislike').text('Disliked') 
+        $(_this).find('#checkDislike').text('  Disliked') 
         totalcountDislike += 1
         $(_this).find('#countDislike').text('('+totalcountDislike+')')
         console.log('true')
@@ -111,7 +111,7 @@ $('.dislike').on('click', function(e){
     }
     else{
         totalcountDislike -= 1
-        $(_this).find('#checkDislike').text('Dislike') 
+        $(_this).find('#checkDislike').text('  Dislike') 
         $(_this).find('#countDislike').text('('+totalcountDislike+')')
         status = 'Dislike'
         $.ajax({
@@ -194,6 +194,7 @@ $(document).on('submit', '#addComment', function(e){
     let commentBody = $('.body').val()
     let commentName = $('.user_name').attr('id');
     let totalComment = $('#totalComment').text();
+    let totalComments = $('.totalComments').text();
     let avatar = $('.avatar').attr('src')
     console.log(commentName)
     console.log(commentBody)
@@ -217,6 +218,7 @@ $(document).on('submit', '#addComment', function(e){
             $('.body').val('');
             let result = Number(totalComment) + 1
             $('#totalComment').text(result)
+            $('.totalComments').text(result);
         },
         error: function(error){
             console.log(error)

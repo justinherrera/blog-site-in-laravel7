@@ -13,7 +13,7 @@
           <div class="post-meta">
                       <a href="/category/{{  $post->category->id }}"class="category">{{ $post->category->category }}</a>
                       <span class="mr-2">{{$post->created_at->diffForHumans() }}</span> &bullet;
-                      <span class="ml-2"><span class="fa fa-comments"></span>{{$commentCount}}</span>
+                      <span class="ml-2"><span class="fa fa-comments"></span><span class="totalComments">{{$commentCount}}</span></span>
                       @if(!Auth::guest())
                         @if(Auth::user()->id == $post->user_id)
                           <a href="/post/{{$post->id}}/edit" class="edit">Edit</a>
@@ -37,13 +37,13 @@
             @csrf
             @method('DELETE')
           <input type="hidden" name="islike" value="{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 1 : 0 : 0}}"> 
-          <a type="submit" id="{{$post->id}}" class="like"><span id="checkLike">{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Liked' : 'Like' : 'Like'}}</span> <span id="countLike">({{$like->where('post_id','=',$post->id)->count()}})</span></a>
+          <a type="submit" id="{{$post->id}}" class="like"><i class="fas fa-thumbs-up"></i><span id="checkLike">{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? '  Liked' : '  Like' : '  Like'}}</span> <span id="countLike">({{$like->where('post_id','=',$post->id)->count()}})</span></a>
           </form>
           <form action="{{ route('post.dislikePost',$post->id) }}" method="GET">
             @csrf
             @method('DELETE')
             <input type="hidden" name="isdislike" value="{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 1 : 0 : 0}}"> 
-          <a type="submit" id="{{$post->id}}" class="dislike"><span id="checkDislike">{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Disliked' : 'Dislike' : 'Dislike'}}</span> <span id="countDislike">({{$dislike->where('post_id','=',$post->id)->count()}})</span></a>
+          <a type="submit" id="{{$post->id}}" class="dislike"><i class="fas fa-thumbs-down"></i><span id="checkDislike">{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? '  Disliked' : '  Dislike' : '  Dislike'}}</span> <span id="countDislike">({{$dislike->where('post_id','=',$post->id)->count()}})</span></a>
           </form>
           @endif
           
