@@ -116,11 +116,12 @@
                 
                 <h2>{{Auth::user()->name}}</h2>
                 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem facilis sunt repellendus excepturi beatae porro debitis voluptate nulla quo veniam fuga sit molestias minus.
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem facilis sunt repellendus excepturi beatae porro debitis voluptate nulla quo veniam fuga sit molestias minus. <br>
 
-                  Liked Articles: {{Auth::user()->likes()->count()}}
-                  Following:
-                  Followers:
+                  Member Since: {{date('F d, Y', strtotime(Auth::user()->created_at))}} <br>
+                  Liked Articles: {{Auth::user()->likes()->count()}}<br>
+                  Following: <br>
+                  Followers: <br>
                 </p>
                 <p><a class="btn btn-primary btn-sm openModal" data-backdrop="static">Create New Article</a></p>
                 <p class="social">

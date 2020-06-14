@@ -9,14 +9,14 @@
       
       <div class="row blog-entries">
         <div class="col-md-12 col-lg-8 main-content">
-          <h1 class="mb-4">{{$post->title }}</h1>
+          <h1 class="mb-4 title">{{$post->title }}</h1>
           <div class="post-meta">
                       <a href="/category/{{  $post->category->id }}"class="category">{{ $post->category->category }}</a>
                       <span class="mr-2">{{$post->created_at->diffForHumans() }}</span> &bullet;
                       <span class="ml-2"><span class="fa fa-comments"></span><span class="totalComments">{{$commentCount}}</span></span>
                       @if(!Auth::guest())
                         @if(Auth::user()->id == $post->user_id)
-                          <a href="/post/{{$post->id}}/edit" class="edit">Edit</a>
+                          <a style="cursor:pointer" class="edit editModal" data-backdrop="static">Edit</a>
                           <a style="cursor:pointer" class="delete">Delete</a>
                         @endif
                       @endif
@@ -30,7 +30,7 @@
               <img src="/storage/images/default_post.jpg" alt="Image placeholders"> 
               @endif
             </div>
-            {!! $post->body !!}
+            <div class="body">{!! $post->body !!}</div>
           </div>
           @if(!Auth::guest())
           <form action="{{ route('post.likePost',$post->id) }}" method="GET">
@@ -195,142 +195,74 @@
         @endforeach
       </div>
     </div>
-
-
   </section>
-{{-- 
-    <div class="row post-section" id="post-{{$post->id}}">
-
-
-      <div class="col-lg-8">
-
-
-        <h1 class="mt-4">{{$post->title }}</h1>
-
-
-        <p class="lead">
-          by
-          <a href="/user/{{$post->user->id}}">{{ $post->user->name }}</a> |
-          <a href="/category/{{  $post->category->id }}"> {{ $post->category->category }} </a>
-        </p>
-
-        <hr>
-
-
-        <p>{{$post->created_at->diffForHumans() }}</p>
-        @if(!Auth::guest())
-          @if(Auth::user()->id == $post->user_id)
-            <a href="/post/{{$post->id}}/edit" class="btn btn-success edit">Edit</a>
-            <a  class="btn btn-danger delete">Delete</a>
-          @endif
-        @endif
-        <hr>
-
-
-        <img class="img-fluid rounded"  src="/storage/images/{{$post->image}}" alt="">
-
-        <hr>
-
-
-        <p class="lead">{{$post->body }}</p>
-        @if(!Auth::guest())
-        <form action="{{ route('post.likePost',$post->id) }}" method="GET">
-          @csrf
-          @method('DELETE')
-        <input type="hidden" name="islike" value="{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 1 : 0 : 0}}"> 
-        <button type="submit" id="{{$post->id}}" class="btn btn-success like"><span id="checkLike">{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Liked' : 'Like' : 'Like'}}</span> <span id="countLike">({{$like->where('post_id','=',$post->id)->count()}})</span></button>
-        </form>
-        <form action="{{ route('post.dislikePost',$post->id) }}" method="GET">
-          @csrf
-          @method('DELETE')
-          <input type="hidden" name="isdislike" value="{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 1 : 0 : 0}}"> 
-        <button type="submit" id="{{$post->id}}" class="btn btn-danger dislike"><span id="checkDislike">{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Disliked' : 'Dislike' : 'Dislike'}}</span> <span id="countDislike">({{$dislike->where('post_id','=',$post->id)->count()}})</span></button>
-        </form>
-        @endif
-
-        <hr>
-
-
-        @if(!Auth::guest())
-          <div class="card my-4">
-            <h5 class="card-header">Leave a Comment:</h5>
-            <div class="card-body">
-              <form action="{{ route('comments.store') }}" method="post" id="addComment">
-                @csrf
-                <input type="hidden" name="post_id" value="{{$post->id}}">
-                <div class="form-group">
-                  <textarea class="form-control body" rows="3" name="body"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
+  <!-- Modal -->
+  <div class="modal fade" id="editPost" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add New Post</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+  <div class="container">
+    <form method="post" enctype="multipart/form-data" id="updatePost" class="{{$post->id}}">
+        @method('PATCH')
+        @csrf
+        <div class="form-group">
+        <label for="exampleInputEmail1">Edit Title</label>
+        <input type="text" class="form-control" name="title" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Title" value="{{old('title', $post->title)}}">
+        {{-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> --}}
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">Edit Body</label>
+            <textarea class="form-control" name="body" id="exampleFormControlTextarea1" rows="3">{{old('body', $post->body)}}</textarea>
+        </div>
+        <div class="form-group">
+          <select name="category" class="form-control category-select">
+            <option selected disabled>Choose Category</option>
+            @foreach ($cats as $cat)
+          <option {{old('$cat_id',$post->cat_id) == $cat->id ? 'selected' : ''}} value="{{$cat->id}}" name="category" class="category-option edit-option">{{$cat->category}}</option> 
+            @endforeach
+          </select>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+              <input type="file" name="image" class="form-control">
             </div>
           </div>
-        @else 
-          <div class="card my-4">
-            <a href="/login">Login</a>
+          <div class="modal-footer">
+            {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary save">Post</button> --}}
+          
+        <button type="submit" class="btn btn-primary update">Update</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
-        @endif
+    </form>
+</div>
 
-        <div class="comment-section">
-        @foreach($comments as $comment)
-          <div class="media mb-4">
-            <img class="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt="">
-            <div class="media-body">
-              <h5 class="mt-0">{{ $comment->user->name }}</h5>
-              {{ $comment->body }}
-            </div>
-          </div>
-        @endforeach
-        </div>
-      </div>
+<script type="text/javascript">
+  // WYSIWYG Editor Integration
 
-
-      <div class="col-md-4">
-
-
-        <div class="card my-4">
-          <h5 class="card-header">Search</h5>
-          <div class="card-body">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Search for...">
-              <span class="input-group-btn">
-                <button class="btn btn-secondary" type="button">Go!</button>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div class="card my-4">
-          <h5 class="card-header">Categories</h5>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-lg-12">    
-                <ul class="list-group">
-                  @foreach ($cats as $cat) 
-                  <li class="list-group-item"><a href="/category/{{$cat->id}}">{{ $cat->category }}</a></li>
-                  @endforeach
-                </ul>   
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card my-4">
-          <h5 class="card-header">Related Posts</h5>
-          <div class="card-body">
-            <ul class="list-group">
-              @foreach($relatedPosts as $relatedPost)
-                <li class="list-group-item"><a href="/post/{{$relatedPost->id}}">{{ $relatedPost->title }}</a></li> 
-              @endforeach
-              </ul>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
+  tinymce.init({
+    selector: '#exampleFormControlTextarea1',
+    height: 300,
+    menubar: false,
+    plugins: [
+      'advlist autolink lists link image charmap print preview anchor',
+      'searchreplace visualblocks code fullscreen',
+      'insertdatetime media table paste code help wordcount'
+    ],
+    toolbar: 'undo redo | formatselect | ' +
+    'bold italic backcolor | alignleft aligncenter ' +
+    'alignright alignjustify | bullist numlist outdent indent | ' +
+    'removeformat | help',
+    content_css: '//www.tiny.cloud/css/codepen.min.css'
+  });
 
 
-  </div> --}}
 
+</script>
 @endsection

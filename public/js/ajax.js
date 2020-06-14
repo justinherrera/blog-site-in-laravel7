@@ -38,7 +38,7 @@ $('.like').on('click', function(e){
     console.log(post_id)
     if($(this).find('#checkLike').text() == "  Like"){
         if($('#post-'+post_id).find('#checkDislike').text() ==   "  Disliked"){
-            totalcountDislike -= 1
+            if(totalcountDislike != 0) totalcountDislike -= 1
             $('#post-'+post_id).find('#countDislike').text('('+totalcountDislike+')')
             $('#post-'+post_id).find('#checkDislike').text('  Dislike')
             $.ajax({
@@ -62,7 +62,7 @@ $('.like').on('click', function(e){
         var header = {}
     }
     else{
-        totalCountLike -= 1
+        if(totalCountLike != 0) totalCountLike -= 1
         $(_this).find('#checkLike').text('  Like') 
         $(_this).find('#countLike').text('('+totalCountLike+')')
         $.ajax({
@@ -110,7 +110,7 @@ $('.dislike').on('click', function(e){
         var header = {}
     }
     else{
-        totalcountDislike -= 1
+        if(totalcountDislike != 0) totalcountDislike -= 1
         $(_this).find('#checkDislike').text('  Dislike') 
         $(_this).find('#countDislike').text('('+totalcountDislike+')')
         status = 'Dislike'
@@ -120,9 +120,15 @@ $('.dislike').on('click', function(e){
         }).done(function(){})
     }
 })
-//open modal
+//open post modal
 $('.openModal').on('click',function(e){
     $('#createPost').modal('show');
+
+})
+
+//open edit modal
+$('.editModal').on('click',function(e){
+    $('#editPost').modal('show');
 
 })
 // post
@@ -187,8 +193,40 @@ $('#createPost').on('submit', '#addPost', function(e){
         }
     })
   });
-// comment
 
+  // update post
+  $('#editPost').on('submit', '#updatePost', function(e){
+        e.preventDefault();
+        let post_id = $('#updatePost').attr('class');
+        let body = tinymce.get('exampleFormControlTextarea1').getContent();
+        let form = $('#updatePost')[0]; 
+        let formData = new FormData(form);
+        $.ajaxSetup({
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+          });
+        $.ajax({
+            type: "PUT",
+            url: "/post/"+post_id,
+            processData: false,
+            data: $("#updatePost").serialize(),
+            success: function(response){
+                console.log(response)
+                $("#editPost").modal("hide");
+                $('.title').text(response.title)
+                $('.body').eq(0).html(body)
+                $('.category').eq(0).text(response.category)
+                $('.modal-backdrop').remove();
+                //window.location.reload();
+            },
+            error: function(error){
+                console.log(error)
+            }
+        })
+  })
+
+// comment
 $(document).on('submit', '#addComment', function(e){
     e.preventDefault();
     let commentBody = $('.body').val()

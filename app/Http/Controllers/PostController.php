@@ -175,8 +175,12 @@ class PostController extends Controller
             $post->image = $filename;
         }
         $post->save();
-        
-        return redirect('/post/'.$id);
+        return response()->json(array(
+            'title' => $post->title,
+            'body' => $post->body,
+            'image' => $post->image,
+            'category' => $post->category->category,
+            'last_insert_id' => $post->id), 200);
     }
 
     /**
