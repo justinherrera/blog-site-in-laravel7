@@ -18,6 +18,6 @@ class CommentController extends Controller
             ]);
         $comment->user_id = auth()->user()->id;
         $comment->save();
-        return redirect()->back();
+        return response()->json(array('avatar' => auth()->user()->avatar), 200);
     }
 }

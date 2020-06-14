@@ -112,17 +112,17 @@ class PostController extends Controller
         $cat = Catrgory::findOrFail($post->cat_id);
         $relatedPosts = $cat->posts()->orderBy('created_at','desc')->take(3)->get();
         $cats = Catrgory::all();
-        $likeCtr = Like::where([
-            'post_id' => $post->id
-            ])->count();
-        $dislikeCtr = Dislike::where([
-            'post_id' => $post->id
-            ])->count();
+        // $likeCtr = Like::where([
+        //     'post_id' => $post->id
+        //     ])->count();
+        // $dislikeCtr = Dislike::where([
+        //     'post_id' => $post->id
+        //     ])->count();
         $like = Like::all();
         $dislike = Dislike::all();
         $comments = Comments::where('post_id', '=', $post->id)->get();
         $commentCount = $comments->count();
-        return view('posts.show', compact('post','cats','likeCtr','dislikeCtr','like','dislike','comments','relatedPosts','commentCount'));
+        return view('posts.show', compact('post','cats','like','dislike','comments','relatedPosts','commentCount'));
     }
 
     /**
@@ -134,10 +134,17 @@ class PostController extends Controller
     public function edit($id)
     {
         $post = Post::find($id);
+        $cats = Catrgory::all();
         if(auth()->user()->id !== $post->user_id){
             return redirect()->back();
         }
-        return view('posts.edit', compact('post'));
+        // dd(old('category'));
+        // //dd(old('title', $post->title));
+        // foreach($cats as $cat){
+        //     //dd($cat->category);
+        //     //dd(old('category'));
+        // }
+        return view('posts.edit', compact('post','cats'));
     }
 
     /**
@@ -153,11 +160,13 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required',
             'body' => 'required',
+            'category' => 'required',
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         $post = Post::find($id);
         $post->title =  $request->get('title');
         $post->body =  $request->get('body');
+        $post->cat_id = $request->get('category');
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $filename = time() . '.' . $image->getClientOriginalExtension();
@@ -167,7 +176,7 @@ class PostController extends Controller
         }
         $post->save();
         
-        return redirect('/post');
+        return redirect('/post/'.$id);
     }
 
     /**

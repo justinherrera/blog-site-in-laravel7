@@ -71,7 +71,11 @@
                     <span class="mr-2">{{$post->created_at->diffForHumans() }}</span> &bullet;
                     <span class="ml-2"><span class="fa fa-comments"></span> {{ $comments->where('post_id','=',$latestPost->id)->count() }}</span>
                   </div>
-                  <h2>{{ substr($post->title,0,30) }}</h2>
+                  @if(strlen($post->title) >= 30)
+                    <h2>{{ substr($post->title,0,30) }}...</h2>
+                  @else
+                    <h2>{{ $post->title }}</h2>
+                  @endif
                   <small>Posted by: {{  substr($post->user->name,0,10) }}</small>
                 </div>
               </a>
@@ -138,7 +142,12 @@
                 
                 <li>
                     <a href="/post/{{$latestPost->id}}">
-                    <img src="storage/images/{{$latestPost->image}}" alt="Image placeholder" class="mr-4">
+                    @if(!is_null($latestPost->image))
+                      <img src="/storage/images/resized/post/{{$latestPost->image}}" alt="Image placeholder" class="mr-4"> 
+                    @else 
+                      <img src="/storage/images/resized/post/default_post_resized.jpg" alt="Image placeholder" class="mr-4"> 
+                    @endif    
+                    {{-- <img src="storage/images/{{$latestPost->image}}" alt="Image placeholder" class="mr-4"> --}}
                     <div class="text">
                       <h4>{{ substr($latestPost->title,0,20) }}</h4>
                       <div class="post-meta">
@@ -309,7 +318,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
               <select name="category" class="form-control category-select">
                 <option selected disabled>Choose Category</option>
                 @foreach ($cats as $cat)
-                   <option value="{{$cat->id}}" class="category-option">{{$cat->category}}</option> 
+                   <option value="{{$cat->id}}" name="category" class="category-option">{{$cat->category}}</option> 
                 @endforeach
               </select>
             </div>

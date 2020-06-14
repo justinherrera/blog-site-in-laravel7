@@ -3,7 +3,7 @@ let post_id = 0;
 let status = "";
 $(document).on('click', '.delete', function () { 
     
-    post_id = $(this).parents('.post-section').attr('id').substr(5)
+    post_id = $(this).parents('.site-section').attr('id').substr(5)
     // confirm("Are You sure want to delete !");
     $.ajax({
         method: "POST",
@@ -205,7 +205,7 @@ $(document).on('submit', '#addComment', function(e){
             console.log(avatar)
             var commentText =  `<li class="comment">
             <div class="vcard">
-            <img src="`+avatar+`" alt="Image placeholder">
+            <img src=/storage/images/resized/user/`+response.avatar+` alt="Image placeholder">
             </div>
             <div class="comment-body">
             <h3>`+commentName+`</h3>

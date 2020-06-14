@@ -17,7 +17,7 @@
                       @if(!Auth::guest())
                         @if(Auth::user()->id == $post->user_id)
                           <a href="/post/{{$post->id}}/edit" class="edit">Edit</a>
-                          <a class="delete">Delete</a>
+                          <a style="cursor:pointer" class="delete">Delete</a>
                         @endif
                       @endif
                     </div>
@@ -25,7 +25,7 @@
             <br>
             <div class="row mb-5">
               @if(!is_null($post->image))
-              <img src="storage/images/resized/post/{{$post->image}}" alt="Image placeholder"> 
+              <img src="/storage/images/{{$post->image}}" alt="Image placeholder"> 
               @else 
               <img src="/storage/images/default_post.jpg" alt="Image placeholders"> 
               @endif
@@ -66,13 +66,18 @@
                 </div>
                 <div class="comment-body">
                   <h3>{{ $comment->user->name }}</h3>
-                <div class="meta">{{ date('F d, Y', strtotime($comment->created_at)) }}</div>
+                {{-- <div class="meta">{{ date('F d, Y', strtotime($comment->created_at)) }}</div> --}}
+                <div class="meta">{{ $comment->created_at->diffForHumans() }}</div>
+                
                   <p>{{ $comment->body }}</p>
                   {{-- <p><a href="#" class="reply">Reply</a></p> --}}
                 </div>
               </li>
+              
               @endforeach
             </ul>
+
+            
             <!-- END comment-list -->
             @if(!Auth::guest())
             <div class="card my-4">
@@ -179,7 +184,11 @@
                 <span class="mr-2">{{date('d-m-Y', strtotime($relatedPost->created_at))}}</span> &bullet;
               <span class="ml-2"><span class="fa fa-comments"></span> {{$commentCount}}</span>
               </div>
+              @if(strlen($relatedPost->title) > 10)
+                <h3>{{ substr($relatedPost->title,0,10) }}...</h3>
+              @else
               <h3>{{ $relatedPost->title }}</h3>
+              @endif
             </div>
           </a>
         </div>
