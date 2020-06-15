@@ -174,6 +174,7 @@ class PostController extends Controller
             Image::make($image)->save(public_path('/storage/images/'.$filename));
             $post->image = $filename;
         }
+        dd($post);
         $post->save();
         return response()->json(array(
             'title' => $post->title,

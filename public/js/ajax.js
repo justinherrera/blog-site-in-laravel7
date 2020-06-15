@@ -171,6 +171,7 @@ $('#createPost').on('submit', '#addPost', function(e){
                     <span class="ml-2"><span class="fa fa-comments" aria-hidden="true"></span> 0</span>
                     </div>
                     <h2>`+title+`</h2>
+                    <small>Posted by: `+$('.bio-body').find('h2').text()+`</small>
                 </div>
                 </a>
             </div>`;
@@ -189,42 +190,51 @@ $('#createPost').on('submit', '#addPost', function(e){
             }
         },
         error: function(error){
-            console.log(error)
+            console.log(error.responseJSON)
+            $('.save').text('Post');
+            $('.title-error').text(error.responseJSON.errors.title)
+            $('.body-error').text(error.responseJSON.errors.body)
+            $('.category-error').text(error.responseJSON.errors.category)
+            $('.image-error').text(error.responseJSON.errors.image)
         }
     })
   });
 
   // update post
-  $('#editPost').on('submit', '#updatePost', function(e){
-        e.preventDefault();
-        let post_id = $('#updatePost').attr('class');
-        let body = tinymce.get('exampleFormControlTextarea1').getContent();
-        let form = $('#updatePost')[0]; 
-        let formData = new FormData(form);
-        $.ajaxSetup({
-            headers: {
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-          });
-        $.ajax({
-            type: "PUT",
-            url: "/post/"+post_id,
-            processData: false,
-            data: $("#updatePost").serialize(),
-            success: function(response){
-                console.log(response)
-                $("#editPost").modal("hide");
-                $('.title').text(response.title)
-                $('.body').eq(0).html(body)
-                $('.category').eq(0).text(response.category)
-                $('.modal-backdrop').remove();
-                //window.location.reload();
-            },
-            error: function(error){
-                console.log(error)
-            }
-        })
-  })
+//   $('#editPost').on('submit', '#updatePost', function(e){
+//         e.preventDefault();
+//         let post_id = $('#updatePost').attr('class');
+//         let body = tinymce.get('exampleFormControlTextarea1').getContent();
+//         let form = $('#updatePost')[0]; 
+//         let formData = new FormData(form);
+//         $.ajaxSetup({
+//             headers: {
+//               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//             }
+//           });
+//         $.ajax({
+//             type: "PUT",
+//             url: "/post/"+post_id,
+//             processData: false,
+//             data: $("#updatePost").serialize(),
+//             success: function(response){
+//                 console.log(response)
+//                 $("#editPost").modal("hide");
+//                 $('.title').text(response.title)
+//                 $('.body').eq(0).html(body)
+//                 $('.category').eq(0).text(response.category)
+//                 $('.modal-backdrop').remove();
+//                 //window.location.reload();
+//             },
+//             error: function(error){
+//                 console.log(error)
+//                 $('.title-error').text(error.responseJSON.errors.title)
+//                 $('.body-error').text(error.responseJSON.errors.body)
+//                 $('.category-error').text(error.responseJSON.errors.category)
+//                 $('.image-error').text(error.responseJSON.errors.image)
+//             }
+//         })
+//   })
 
 // comment
 $(document).on('submit', '#addComment', function(e){

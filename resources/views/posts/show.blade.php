@@ -214,11 +214,13 @@
         <div class="form-group">
         <label for="exampleInputEmail1">Edit Title</label>
         <input type="text" class="form-control" name="title" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Title" value="{{old('title', $post->title)}}">
+        <span style="color:red" class="title-error"></span>
         {{-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> --}}
         </div>
         <div class="form-group">
             <label for="exampleFormControlTextarea1">Edit Body</label>
             <textarea class="form-control" name="body" id="exampleFormControlTextarea1" rows="3">{{old('body', $post->body)}}</textarea>
+            <span style="color:red" class="title-error"></span>
         </div>
         <div class="form-group">
           <select name="category" class="form-control category-select">
@@ -227,12 +229,14 @@
           <option {{old('$cat_id',$post->cat_id) == $cat->id ? 'selected' : ''}} value="{{$cat->id}}" name="category" class="category-option edit-option">{{$cat->category}}</option> 
             @endforeach
           </select>
+          <span style="color:red" class="title-error"></span>
         </div>
         <div class="form-group">
             <div class="col-md-6">
               <input type="file" name="image" class="form-control">
             </div>
           </div>
+          <span style="color:red" class="title-error"></span>
           <div class="modal-footer">
             {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary save">Post</button> --}}

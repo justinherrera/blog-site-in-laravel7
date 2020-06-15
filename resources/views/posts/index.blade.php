@@ -310,10 +310,12 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             <div class="form-group">
               <label for="exampleInputEmail1">Title</label>
               <input type="text" class="form-control title" id="title" aria-describedby="emailHelp"  name="title" placeholder="Enter Title" autocomplete="off">
+              <span style="color:red" class="title-error"></span>
             </div>
             <div class="form-group">
               <label for="exampleInputPassword1">Body</label>
               <textarea class="form-control body" id="body" rows="3" name="body"></textarea>
+              <span style="color:red" class="body-error"></span>
             </div>
             <div class="form-group">
               <select name="category" class="form-control category-select">
@@ -322,10 +324,12 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                    <option value="{{$cat->id}}" name="category" class="category-option">{{$cat->category}}</option> 
                 @endforeach
               </select>
+              <span style="color:red" class="category-error"></span>
             </div>
             <div class="form-group">
                 <label for="image">Choose Image File</label>
                 <input type="file" name="image" class="form-control-file" id="image">
+                <span style="color:red" class="image-error"></span>
             </div>
             {{-- <button type="submit" class="btn btn-primary">Submit</button> --}}
         
