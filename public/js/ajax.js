@@ -201,40 +201,46 @@ $('#createPost').on('submit', '#addPost', function(e){
   });
 
   // update post
-//   $('#editPost').on('submit', '#updatePost', function(e){
-//         e.preventDefault();
-//         let post_id = $('#updatePost').attr('class');
-//         let body = tinymce.get('exampleFormControlTextarea1').getContent();
-//         let form = $('#updatePost')[0]; 
-//         let formData = new FormData(form);
-//         $.ajaxSetup({
-//             headers: {
-//               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//             }
-//           });
-//         $.ajax({
-//             type: "PUT",
-//             url: "/post/"+post_id,
-//             processData: false,
-//             data: $("#updatePost").serialize(),
-//             success: function(response){
-//                 console.log(response)
-//                 $("#editPost").modal("hide");
-//                 $('.title').text(response.title)
-//                 $('.body').eq(0).html(body)
-//                 $('.category').eq(0).text(response.category)
-//                 $('.modal-backdrop').remove();
-//                 //window.location.reload();
-//             },
-//             error: function(error){
-//                 console.log(error)
-//                 $('.title-error').text(error.responseJSON.errors.title)
-//                 $('.body-error').text(error.responseJSON.errors.body)
-//                 $('.category-error').text(error.responseJSON.errors.category)
-//                 $('.image-error').text(error.responseJSON.errors.image)
-//             }
-//         })
-//   })
+  $('#editPost').on('submit', '#updatePost', function(e){
+        e.preventDefault();
+        let post_id = $('#updatePost').attr('class');
+        let body = tinymce.get('exampleFormControlTextarea1').getContent();
+        let form = $('#updatePost')[0]; 
+        let formData = new FormData(form);
+        // formData.append('_method', 'patch');
+        //formData.append('_method', 'PATCH');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: "/post/"+post_id,
+            method: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            cache: false,
+            dataType: 'json',
+            success: function(response){
+                console.log(response)
+                $("#editPost").modal("hide");
+                $('.title').text(response.title)
+                $('.body').eq(0).html(body)
+                $('.post-image').attr('src','/storage/images/resized/show_post/'+response.image)
+                $('.category').eq(0).text(response.category)
+                $('.modal-backdrop').remove();
+                //window.location.reload();
+            },
+            error: function(error){
+                console.log(error)
+                $('.title-error').text(error.responseJSON.errors.title)
+                $('.body-error').text(error.responseJSON.errors.body)
+                $('.category-error').text(error.responseJSON.errors.category)
+                $('.image-error').text(error.responseJSON.errors.image)
+            }
+        })
+  })
 
 // comment
 $(document).on('submit', '#addComment', function(e){

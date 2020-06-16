@@ -25,9 +25,9 @@
             <br>
             <div class="row mb-5">
               @if(!is_null($post->image))
-              <img src="/storage/images/{{$post->image}}" alt="Image placeholder"> 
+              <img class="post-image" src="/storage/images/resized/show_post/{{$post->image}}" alt="Image placeholder"> 
               @else 
-              <img src="/storage/images/default_post.jpg" alt="Image placeholders"> 
+              <img class="post-image" src="/storage/images/default_post.jpg" alt="Image placeholders"> 
               @endif
             </div>
             <div class="body">{!! $post->body !!}</div>
@@ -220,7 +220,7 @@
         <div class="form-group">
             <label for="exampleFormControlTextarea1">Edit Body</label>
             <textarea class="form-control" name="body" id="exampleFormControlTextarea1" rows="3">{{old('body', $post->body)}}</textarea>
-            <span style="color:red" class="title-error"></span>
+            <span style="color:red" class="body-error"></span>
         </div>
         <div class="form-group">
           <select name="category" class="form-control category-select">
@@ -229,14 +229,14 @@
           <option {{old('$cat_id',$post->cat_id) == $cat->id ? 'selected' : ''}} value="{{$cat->id}}" name="category" class="category-option edit-option">{{$cat->category}}</option> 
             @endforeach
           </select>
-          <span style="color:red" class="title-error"></span>
+          <span style="color:red" class="category-error"></span>
         </div>
         <div class="form-group">
-            <div class="col-md-6">
-              <input type="file" name="image" class="form-control">
+              <label for="image">Choose Image File</label>
+              <input type="file" name="image" class="form-control-file">
             </div>
-          </div>
-          <span style="color:red" class="title-error"></span>
+        </div>
+          <span style="color:red" class="image-error"></span>
           <div class="modal-footer">
             {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary save">Post</button> --}}

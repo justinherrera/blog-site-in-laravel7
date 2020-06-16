@@ -92,6 +92,7 @@ class PostController extends Controller
             $image = $request->file('image');
             $filename = time() . '.' . $image->getClientOriginalExtension();
             Image::make($image)->fit(350,247)->save(public_path('/storage/images/resized/post/'.$filename));
+            Image::make($image)->fit(500,500)->save(public_path('/storage/images/resized/show_post/'.$filename));
             Image::make($image)->save(public_path('/storage/images/'.$filename));
             $post->image = $filename;
         }
@@ -171,10 +172,11 @@ class PostController extends Controller
             $image = $request->file('image');
             $filename = time() . '.' . $image->getClientOriginalExtension();
             Image::make($image)->fit(350,247)->save(public_path('/storage/images/resized/post/'.$filename));
+            Image::make($image)->fit(500,500)->save(public_path('/storage/images/resized/show_post/'.$filename));
             Image::make($image)->save(public_path('/storage/images/'.$filename));
             $post->image = $filename;
         }
-        dd($post);
+        // dd($post);
         $post->save();
         return response()->json(array(
             'title' => $post->title,
