@@ -1168,7 +1168,7 @@ textarea.form-control {
   background: #007bff;
 }
 
-.pagination {
+/* .pagination {
   margin-bottom: 5em;
   text-align: center !important;
   display: block;
@@ -1195,7 +1195,7 @@ textarea.form-control {
   background: #007bff;
   color: #fff;
   border: 1px solid transparent;
-}
+} */
 
 .categories, .sidelink {
   padding: 0;
