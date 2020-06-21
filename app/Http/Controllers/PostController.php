@@ -32,7 +32,9 @@ class PostController extends Controller
     public function index()
     {
         // for public posts
+        
         $posts = Post::orderBy('created_at','desc')->paginate(8);
+        $sortedLikedPosts = Post::withCount('liked')->orderBy('liked_count','desc')->take(3)->get();
         $cats = Catrgory::all();
         $like = Like::all();
         $dislike = Dislike::all();
@@ -40,7 +42,7 @@ class PostController extends Controller
         $latestPosts = Post::orderBy('created_at','desc')->take(3)->get();
         $cat = Catrgory::findOrFail(1); // get food posts
         $foodPosts = $cat->posts()->orderBy('created_at','desc')->take(8)->get();
-        return view('posts.index', compact('posts','cats','like','dislike','comments','latestPosts'));
+        return view('posts.index', compact('posts','cats','like','dislike','comments','latestPosts','lik','sortedLikedPosts'));
     }
     public function search(Request $request){
         $search = $request->get('search');

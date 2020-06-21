@@ -69,7 +69,7 @@
                   <div class="post-meta">
                     <span class="category">{{$post->category->category}}</span>
                     <span class="mr-2">{{$post->created_at->diffForHumans() }}</span> &bullet;
-                    <span class="ml-2"><span class="fa fa-comments"></span> {{ $comments->where('post_id','=',$latestPost->id)->count() }}</span>
+                    <span class="ml-2"><span class="fa fa-comments"></span> {{ $comments->where('post_id','=',$post->id)->count() }}</span>
                   </div>
                   @if(strlen($post->title) >= 30)
                     <h2>{{ substr($post->title,0,30) }}...</h2>
@@ -113,7 +113,11 @@
           @if(!Auth::guest())
           <div class="sidebar-box">
             <div class="bio text-center">
+              @if(!is_null(Auth::user()->avatar))
               <img src="storage/images/resized/user/{{Auth::user()->avatar}}" alt="Image Placeholder" class="img-fluid">
+              @else
+              <img src="storage/images/resized/user/default_avatar.png" alt="Image Placeholder" class="img-fluid">
+              @endif
               <div class="bio-body">
                 
                 <h2>{{Auth::user()->name}}</h2>
@@ -139,29 +143,32 @@
           <!-- END sidebar-box -->  
           <div class="sidebar-box">
             <h3 class="heading">Most Liked Posts</h3>
+            
             <div class="post-entry-sidebar">
               <ul>
-                @foreach($latestPosts as $latestPost)
+                @foreach($sortedLikedPosts as $sortedLikedPost)
                 
                 <li>
-                    <a href="/post/{{$latestPost->id}}">
-                    @if(!is_null($latestPost->image))
-                      <img src="/storage/images/resized/post/{{$latestPost->image}}" alt="Image placeholder" class="mr-4"> 
+                    <a href="/post/{{$sortedLikedPost->id}}">
+                    @if(!is_null($sortedLikedPost->image))
+                      <img src="/storage/images/resized/post/{{$sortedLikedPost->image}}" alt="Image placeholder" class="mr-4"> 
                     @else 
                       <img src="/storage/images/resized/post/default_post_resized.jpg" alt="Image placeholder" class="mr-4"> 
                     @endif    
-                    {{-- <img src="storage/images/{{$latestPost->image}}" alt="Image placeholder" class="mr-4"> --}}
+                    {{-- <img src="storage/images/{{$sortedLikedPost->image}}" alt="Image placeholder" class="mr-4"> --}}
                     <div class="text">
-                      <h4>{{ substr($latestPost->title,0,20) }}</h4>
+                      <h4>{{ substr($sortedLikedPost->title,0,20) }}</h4>
                       <div class="post-meta">
-                        <span class="mr-2">{{$latestPost->created_at->diffForHumans() }}</span> &bullet;
-                        <span class="ml-2"><span class="far fa-thumbs-up"></span>  {{ $like->where('post_id','=',$latestPost->id)->count() }}</span>
+                        <span class="mr-2">{{$sortedLikedPost->created_at->diffForHumans() }}</span> &bullet;
+                        <span class="ml-2"><span class="far fa-thumbs-up"></span>  {{ $like->where('post_id','=',$sortedLikedPost->id)->count() }}</span>
+                        {{-- <span>x{{$like->post->title}}</span> --}}
                       </div>
                     </div>
                   </a>
                 </li>
                 @endforeach
               </ul>
+
             </div>
           </div>
           <!-- END sidebar-box -->
@@ -272,107 +279,4 @@
 
   </script>
   @endsection
-    {{-- <div class="row">
-
-      <!-- Blog Entries Column -->
-      <div class="col-md-8">
-
-        <h1 class="my-4">Articles
-          <small>Secondary Text</small>
-        </h1>
-
-        <a href="/post/create">Create new post</a>
-        @forelse($posts as $post)
-        <div class="card mb-4 post-section" id="post-{{$post->id}}">
-          <img class="card-img-top" src="/storage/images/{{$post->image}}" alt="Card image cap">
-          
-          <div class="card-body">
-            <h2 class="card-title">{{ $post->title }}</h2>
-            <p class="card-text">{{ Str::words($post->body,10) }}</p>
-            <a href="/post/{{ $post->id }}" class="btn btn-primary"><span class="fas fa-eye"></span> Read More →</a>
-            @if(!Auth::guest())
-            <form action="{{ route('post.likePost',$post->id) }}" method="GET" id="like">
-              @csrf
-              @method('DELETE')
-            <input type="hidden" name="islike" value="{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 1 : 0 : 0}}"> 
-          <a id="{{$post->id}}" class="btn btn-success like"><span id="checkLike">{{ (Auth::user()->likes()->where('post_id', $post->id)->first()) ? (Auth::user()->likes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Liked' : 'Like' : 'Like'}}</span> <span id="countLike">({{$like->where('post_id','=',$post->id)->count()}})</span></a>
-          </form>
-          <form action="{{ route('post.dislikePost',$post->id) }}" method="GET">
-            @csrf
-            @method('DELETE')
-            <input type="hidden" name="isdislike" value="{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 1 : 0 : 0}}"> 
-          <a id="{{$post->id}}" class="btn btn-danger dislike"><span id="checkDislike">{{ (Auth::user()->dislikes()->where('post_id', $post->id)->first()) ? (Auth::user()->dislikes()->where('post_id', $post->id)->first()->user_id == auth()->user()->id) ? 'Disliked' : 'Dislike' : 'Dislike'}}</span> <span id="countDislike">({{$dislike->where('post_id','=',$post->id)->count()}})</span></a>
-          </form>
-            @endif
-            <p>Comments: {{ $comments->where('post_id','=',$post->id)->count() }}</p>
-          </div>
-          <div class="card-footer text-muted">
-            Posted {{$post->created_at->diffForHumans() }} by
-            <a href="user/{{$post->user->id}}">{{ $post->user->name }}</a> |
-            <a href="/category/{{  $post->category->id }}"> {{ $post->category->category }} </a>
-
-          </div>
-        </div>
-        @empty
-          <p>No posts available</p>
-        @endforelse
-
-
-        <ul class="pagination justify-content-center mb-4">
-          <li class="page-item">
-            {{ $posts->links() }}
-          </li>
-        </ul>
-
-      </div>
-
-
-      <div class="col-md-4">
-
-
-        <div class="card my-4 ">
-          <h5 class="card-header">Search Post</h5>
-          <div class="card-body">
-            <form action="/search" method="get">
-            <div class="input-group">   
-              <input type="text" name="search" class="form-control" placeholder="Search for...">
-              <span class="input-group-btn">
-                <button class="btn btn-secondary" type="submit">Go!</button>
-              </span> 
-            </div>
-          </form>
-          </div>
-        </div>
-
-     
-        <div class="card my-4">
-          <h5 class="card-header">Categories</h5>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-lg-12">    
-                <ul class="list-group">
-                  @foreach ($cats as $cat) 
-                  <li class="list-group-item"><a href="/category/{{$cat->id}}">{{ $cat->category }}</a>({{$cat->posts->count()}})</li>
-                  @endforeach
-                </ul>   
-              </div>
-            </div>
-          </div>
-        </div>
-
-      
-        <div class="card my-4">
-          <h5 class="card-header">Related Posts</h5>
-          <div class="card-body">
-            You can put anything you want inside of these side widgets. They are easy to use, and feature the new Bootstrap 4 card containers!
-          </div>
-        </div>
-
-      </div>
-
-    </div> --}}
-    <!-- /.row -->
-  {{-- <script type="text/javascript">
-    console.log('user '+{!! auth()->user()->id !!})
-  </script> --}}
-
+ 
